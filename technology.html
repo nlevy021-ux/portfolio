@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technology | Noah Levy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="logo">NOAH LEVY</a>
+            </div>
+
+            <nav class="filter-nav">
+                <div class="nav-links-static">
+                    <a href="index.html">All Work</a>
+                    <a href="photography.html">Photography</a>
+                    <a href="printmaking.html">Printmaking</a>
+                    <a href="technology.html" class="active" style="font-weight: 600;">Technology</a>
+                    <a href="about.html">About</a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="project-grid" id="tech-grid">
+                <!-- Populated by JS -->
+            </div>
+        </main>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('tech-grid');
+            const projects = (window.projects && window.projects.technology) || [];
+
+            projects.forEach(project => {
+                const card = document.createElement('a');
+                card.href = project.url || '#';
+                card.className = 'project-card';
+                card.style.display = 'block';
+
+                card.innerHTML = `
+                    <div class="card-image-wrapper">
+                        <img src="${project.image}" alt="${project.title}">
+                    </div>
+                    <div class="card-info">
+                        <span class="card-title">${project.title}</span>
+                        <span class="card-details">${project.medium} · ${project.year}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        });
+    </script>
+</body>
+
+</html>

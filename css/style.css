@@ -1,0 +1,530 @@
+/* Basic Reset & Typography */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    line-height: 1.5;
+    background-color: #ffffff;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+}
+
+/* Layout Container */
+.layout-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    padding: 40px;
+    background: #fff;
+    position: fixed;
+    height: 100%;
+    overflow-y: auto;
+    border-right: 1px solid #eee;
+    z-index: 10;
+}
+
+.logo {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 60px;
+    position: relative;
+    display: inline-block;
+}
+
+.logo:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #000;
+    transition: width 0.3s ease;
+}
+
+.logo:hover:after {
+    width: 100%;
+}
+
+.filter-group {
+    margin-bottom: 40px;
+}
+
+.filter-group h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.filter-group ul {
+    list-style: none;
+}
+
+.filter-group li {
+    margin-bottom: 8px;
+}
+
+/* Filter Buttons & Links */
+.filter-btn {
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: #555;
+    cursor: pointer;
+    text-align: left;
+    padding: 2px 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.filter-btn:hover {
+    color: #000;
+    transform: translateX(4px);
+}
+
+.filter-btn.active {
+    font-weight: 600;
+    color: #000;
+    transform: translateX(4px);
+}
+
+.nav-links-static {
+    margin-top: 60px;
+}
+
+.nav-links-static a {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #555;
+    transition: all 0.3s ease;
+}
+
+.nav-links-static a:hover {
+    color: #000;
+    transform: translateX(4px);
+}
+
+/* Colored Dots for Mediums */
+.medium-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 12px;
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+
+.filter-btn:hover .medium-dot,
+.filter-btn.active .medium-dot {
+    transform: scale(1.2);
+}
+
+.dot-photography {
+    background-color: #4CAF50;
+}
+
+.dot-printmaking {
+    background-color: #FF9800;
+}
+
+.dot-technology {
+    background-color: #2196F3;
+}
+
+.dot-all {
+    background-color: #9E9E9E;
+}
+
+
+/* Main Content & Grid */
+.main-content {
+    flex: 1;
+    margin-left: 250px;
+    padding: 60px;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 60px;
+    padding-bottom: 60px;
+}
+
+/* Project Item Card */
+.project-card {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    perspective: 1000px;
+    /* For potential 3D effects */
+}
+
+.card-image-wrapper {
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: #f0f0f0;
+    margin-bottom: 16px;
+    border-radius: 2px;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.card-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    transform-origin: center;
+}
+
+/* Hover Effects */
+.project-card:hover .card-image-wrapper {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+}
+
+.project-card:hover .card-image-wrapper img {
+    transform: scale(1.08);
+}
+
+.card-info {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    transform: translateY(0);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.project-card:hover .card-info {
+    opacity: 1;
+    transform: translateY(-4px);
+}
+
+.card-title {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+    position: relative;
+    display: inline-block;
+    font-style: italic;
+}
+
+.card-title:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #000;
+    transition: width 0.3s ease;
+}
+
+.project-card:hover .card-title:after {
+    width: 100%;
+}
+
+.card-details {
+    color: #666;
+    font-size: 0.85rem;
+    display: block;
+}
+
+/* Project Page Specifics */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 30px;
+    color: #666;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    color: #000;
+    transform: translateX(-4px);
+}
+
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+    .project-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .layout-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 20px 20px 10px 20px;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 30px 20px;
+    }
+
+    .sidebar-header {
+        margin-bottom: 20px;
+    }
+
+    .filter-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .filter-group {
+        margin-bottom: 10px;
+        margin-right: 20px;
+    }
+
+    .nav-links-static {
+        margin-top: 0;
+        width: 100%;
+        display: flex;
+        gap: 20px;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+    }
+
+    .nav-links-static div {
+        margin-top: 0 !important;
+        /* Override inline style from project.html if exists */
+    }
+}
+
+/* Project Content Layouts */
+.project-content-grid {
+    display: grid;
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
+.tech-layout {
+    grid-template-columns: 1fr 2fr;
+}
+
+.art-layout {
+    grid-template-columns: 1fr;
+    max-width: none;
+    width: 100%;
+}
+
+.project-left-col,
+.project-right-col,
+.project-full-col {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* Meta Section (Technology) */
+.meta-section {
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 4px;
+    border-left: 3px solid #000;
+}
+
+.meta-item {
+    margin-bottom: 25px;
+}
+
+.meta-item:last-child {
+    margin-bottom: 0;
+}
+
+.meta-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.meta-value {
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.6;
+}
+
+.section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.section-title:after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #eee;
+}
+
+.section-content {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.7;
+}
+
+/* First-line indent for description paragraphs */
+.section-content[data-field="description"] p {
+    text-indent: 2em;
+}
+
+/* Paragraph spacing inside section content */
+.section-content p {
+    margin-bottom: 1em;
+}
+
+/* List styling inside editable section content */
+.section-content ul {
+    list-style: disc;
+    margin-left: 1.25rem;
+    padding-left: 1.25rem;
+}
+
+.section-content ol {
+    list-style: decimal;
+    margin-left: 1.25rem;
+    padding-left: 1.25rem;
+}
+
+.section-content li {
+    margin-bottom: 6px;
+}
+
+.section-content strong {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+/* Specific Project Detail Styles */
+.project-header {
+    margin-bottom: 60px;
+}
+
+.project-title-large {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3rem;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.project-meta-large {
+    display: flex;
+    gap: 30px;
+    font-size: 0.9rem;
+    color: #666;
+    align-items: center;
+}
+
+/* Gallery Adjustment */
+.project-gallery {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 40px;
+    margin-top: 0px;
+}
+
+.gallery-item {
+    overflow: hidden;
+    background: #fdfdfd;
+}
+
+.gallery-item.full {
+    grid-column: span 12;
+}
+
+.gallery-item.half-left {
+    grid-column: span 6;
+}
+
+.gallery-item.half-right {
+    grid-column: span 6;
+}
+
+.gallery-item.inset-left {
+    grid-column: 2 / span 10;
+}
+
+.gallery-item.inset-right {
+    grid-column: 2 / span 10;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+    .tech-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .project-title-large {
+        font-size: 2.5rem;
+    }
+
+    .project-gallery {
+        gap: 20px;
+    }
+
+    .gallery-item.half-left,
+    .gallery-item.half-right,
+    .gallery-item.inset-left,
+    .gallery-item.inset-right {
+        grid-column: span 12;
+    }
+}
