@@ -508,6 +508,23 @@ a {
     transform: scale(1.02);
 }
 
+.project-gallery.gallery-equal-pairs {
+    align-items: stretch;
+}
+
+.project-gallery.gallery-equal-pairs .gallery-item.half-left,
+.project-gallery.gallery-equal-pairs .gallery-item.half-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-gallery.gallery-equal-pairs .gallery-item img {
+    width: 100%;
+    height: auto;
+    object-fit: unset;
+}
+
 @media (max-width: 768px) {
     .tech-layout {
         grid-template-columns: 1fr;

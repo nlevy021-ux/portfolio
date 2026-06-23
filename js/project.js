@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let lightboxImages = []; // Track only image items for lightbox
     if (project.images && project.images.length > 0) {
         galleryHTML = `
-            <div class="project-gallery">
+            <div class="project-gallery${project.galleryClass ? ' ' + project.galleryClass : ''}">
                 ${project.images.map((img, index) => {
             const url = typeof img === 'string' ? img : img.url;
             const layoutClass = (typeof img !== 'string' && img.layout) ? img.layout : 'full';
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="project-full-col">
                 <div class="project-section">
                     <h2 class="section-title">Description</h2>
-                    <div class="section-content" contenteditable="true" data-field="description">${descriptionContent}</div>
+                    <div class="section-content" data-field="description">${descriptionContent}</div>
                 </div>
             </div>
         </div>
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="project-full-col">
                 <div class="project-section">
                     <h2 class="section-title">Process</h2>
-                    <div class="section-content" contenteditable="true" data-field="process">${processDescription}</div>
+                    <div class="section-content" data-field="process">${processDescription}</div>
                 </div>
             </div>
         </div>

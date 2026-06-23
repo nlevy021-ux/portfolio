@@ -1,6 +1,81 @@
 window.projects = {
     photography: [
         {
+            id: 'precedence',
+            title: 'Precedence',
+            year: '2026',
+            medium: 'Photography',
+            image: 'assets/precedence/render-01.png',
+            description: 'A media theory project about representation shaping reality instead of simply capturing it. Drawings are run through SDXL Turbo and Real-ESRGAN, then translated into metal sculptures.',
+            detailedDescription: `
+                <p>Precedence is about what happens when representation begins to shape reality instead of simply capturing it. The project starts from Baudrillard’s idea that the map can come before the territory, where images no longer just point back to the real, but begin to produce it.</p>
+
+                <p>For this series, I begin with hand drawings and run them through a fixed SDXL Turbo image pipeline, then upscale them with Real-ESRGAN. The resulting images look like photographs of sculptures in architectural spaces, with specific lighting, shadows, and materials, even though the scenes never existed in front of a camera.</p>
+
+                <p>Selected digital forms are then fabricated as real metal sculptures. In this process, the image becomes a kind of instruction for reality. The object does not come first; it follows the image, turning fabrication into a way of making the representation physically true.</p>
+            `,
+            work: 'Seven still-life renders produced from original drawings via SDXL Turbo and Real-ESRGAN. Forms extracted from the generated compositions are fabricated as metal sculptures, closing the loop between indexical image and physical object.',
+            process: `
+                <p><strong>Drawing:</strong> Hand drawings set the composition, gesture, and spatial relationships.</p>
+
+                <p><strong>SDXL Turbo:</strong> Each drawing is run through an SDXL Turbo image-to-image pipeline with the same prompt language around geometric sculpture, architectural space, hard light, and mixed materials. The model keeps the structure of the drawing while adding surface, atmosphere, and a photographic quality.</p>
+
+                <p><strong>Real-ESRGAN:</strong> The images are then upscaled to bring out sharper detail, texture, and light, so they read less like rough AI outputs and more like finished photographic images.</p>
+
+                <p><strong>Fabrication:</strong> Selected forms from the images are then translated into metal sculptures. The objects do not come before the images; they are built afterward, making the physical work follow the representation.</p>
+            `,
+            url: 'project.html?id=precedence',
+            images: [
+                { url: 'assets/precedence/render-01.png', title: 'Chairs', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
+                { url: 'assets/precedence/render-02.png', title: 'String', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
+                { url: 'assets/precedence/render-03.png', title: 'Midnight', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
+                { url: 'assets/precedence/render-04.png', title: 'Roof', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
+                { url: 'assets/precedence/render-05.png', title: 'Green', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
+                { url: 'assets/precedence/render-06.png', title: 'Switch', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
+                { url: 'assets/precedence/render-07.png', title: 'Stair', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
+                { url: 'assets/precedence/photo-01.png', title: 'Installation', materials: 'Metal, iridescent film, inkjet print', layout: 'full' },
+                { url: 'assets/precedence/photo-02.png', title: 'Teardrop', materials: 'Metal, iridescent film', layout: 'full' },
+                { url: 'assets/precedence/photo-03.png', title: 'Cylinder', materials: 'Metal wire, glass', layout: 'full' },
+                { url: 'assets/precedence/photo-04.png', title: 'Sail', materials: 'Metal wire, glass, iridescent film', layout: 'full' }
+            ]
+        },
+        {
+            id: 'pareidolia',
+            title: 'Pareidolia',
+            year: '2026',
+            medium: 'Photography',
+            image: 'assets/pareidolia/eyes.png',
+            description: 'A project about pareidolia, computer vision, and how human ways of seeing become embedded in the datasets and systems trained on them.',
+            detailedDescription: `
+                <p>Pareidolia is the tendency to see meaning in ambiguous forms—most often faces, figures, or familiar shapes in random patterns.</p>
+
+                <p>This project looks at the relationship between that human impulse and computer vision. The photographs begin with ordinary scenes that contain accidental resemblances, small visual moments that can be read in more than one way. When these images are passed through a computer vision system, the model produces its own labels and predictions, often with confidence even when the image is uncertain or ambiguous.</p>
+
+                <p>The work is about the space between human misrecognition and machine misclassification. Because datasets are labeled, organized, and designed by people, they carry human assumptions into the systems trained on them. In that sense, computer vision does not simply extend sight. It can also scale up the same biases, habits, and mistakes already present in human perception.</p>
+            `,
+            work: 'Nine photographs of ambiguous everyday scenes paired with computer vision outputs. Each pairing shows a moment where human pareidolia and algorithmic prediction meet, overlap, or misread the image in different ways.',
+            process: `
+                <p><strong>Human reading:</strong> Each image is considered through what a viewer might project onto it: a face, a figure, a body, or another familiar form. This makes the act of misreading visible instead of treating it as a private reaction.</p>
+
+                <p><strong>Computer vision:</strong> The same images are run through a computer vision model, which returns labels, categories, and confidence scores. These outputs show how the system interprets ambiguity through the categories it has been trained to recognize.</p>
+
+                <p><strong>Comparison:</strong> Human readings and model predictions are shown together to trace how perception moves from individual sight, to labeled datasets, to automated systems. The project asks what happens when the human habit of seeing patterns everywhere becomes part of a machine’s way of seeing.</p>
+            `,
+            url: 'project.html?id=pareidolia',
+            galleryClass: 'gallery-equal-pairs',
+            images: [
+                { url: 'assets/pareidolia/cactus.png', title: 'Cactus', materials: '2026', layout: 'half-left' },
+                { url: 'assets/pareidolia/rome.png', title: 'Rome', materials: '2026', layout: 'half-right' },
+                { url: 'assets/pareidolia/fireplace.png', title: 'Fireplace', materials: '2026', layout: 'half-left' },
+                { url: 'assets/pareidolia/yellow-road.png', title: 'Yellow Road', materials: '2026', layout: 'half-right' },
+                { url: 'assets/pareidolia/kitchen.png', title: 'Kitchen', materials: '2026', layout: 'half-left' },
+                { url: 'assets/pareidolia/pool.png', title: 'Pool', materials: '2026', layout: 'half-right' },
+                { url: 'assets/pareidolia/window.png', title: 'Window', materials: '2026', layout: 'half-left' },
+                { url: 'assets/pareidolia/eyes.png', title: 'Eyes', materials: '2026', layout: 'half-right' },
+                { url: 'assets/pareidolia/suitcases.png', title: 'Suitcases', materials: '2026', layout: 'half-left' }
+            ]
+        },
+        {
             id: 'constructed-organics',
             title: 'Constructed Organics',
             year: '2025',
@@ -256,6 +331,35 @@ window.projects = {
     ],
     technology: [
         {
+            id: 'brainwave-architecture',
+            title: 'Brainwave Architecture',
+            year: '2025',
+            medium: 'Technology',
+            image: 'assets/brainwave-arch/render-01.png',
+            description: 'Translating emotions into architectural components in Blender, then feeding that image and a text prompt through a Flux image model to produce fully rendered final images. Exploring EEG, AI pipelines, and the separation of mind, body, and space—how thoughts let you exist in separate spaces, visualized.',
+            detailedDescription: 'This project takes emotions and translates them into architectural components modeled in Blender. Those 3D scenes are rendered, then combined with a text prompt and fed through a Flux image model to generate fully rendered final images. It sits at the intersection of EEG-driven art, AI pipelines, and conceptual exploration: the separation of mind, body, and space, and how thoughts allow you to exist in separate spaces—and what it looks like when that is visualized. The resulting images are stark, brutalist interiors—textured concrete, dramatic light, and ambiguous scale—that read as both physical places and mental constructs.',
+            work: 'A pipeline from emotion → Blender architecture → raw render → structural guidance (e.g. Canny edges) → Flux model + text prompt → final image. The first three images are the project outputs; the last two show how the third image was made: the raw Blender render and the Canny edge map used as input to the Flux model.',
+            process: `
+                <p><strong>Emotion to form:</strong> Emotional or conceptual states are translated into architectural primitives and arrangements in Blender—blocks, beams, planes, voids—without literal representation.</p>
+
+                <p><strong>Raw render:</strong> The scene is rendered as a clean, untextured grayscale pass (geometry, light, and shadow only). This becomes the structural basis for the next step.</p>
+
+                <p><strong>Structural map:</strong> A Canny edge detection pass is run on the raw render. The resulting line drawing preserves layout and composition while stripping texture and tone, giving the AI a clear “skeleton” to follow.</p>
+
+                <p><strong>Flux pipeline:</strong> The edge map (and optionally the raw render) is fed into a Flux image model together with a text prompt that describes mood, material (e.g. brutalist concrete), lighting, and atmosphere. The model produces the fully rendered final image—concrete, haze, volumetric light—while respecting the original composition.</p>
+
+                <p>The result visualizes “separate spaces” of mind and body: the same structure can feel physical (concrete, weight) and immaterial (floating blocks, glowing voids), echoing how thoughts create places we inhabit without moving.</p>
+            `,
+            url: 'project.html?id=brainwave-architecture',
+            images: [
+                { url: 'assets/brainwave-arch/render-01.png', title: 'Render 01', materials: 'Blender, Flux', layout: 'full' },
+                { url: 'assets/brainwave-arch/render-02.png', title: 'Render 02', materials: 'Blender, Flux', layout: 'full' },
+                { url: 'assets/brainwave-arch/render-03.png', title: 'Render 03', materials: 'Blender, Flux', layout: 'full' },
+                { url: 'assets/brainwave-arch/render-03-raw.png', title: 'Raw Blender render (source for Render 03)', materials: 'Blender', layout: 'half-left' },
+                { url: 'assets/brainwave-arch/render-03-canny.png', title: 'Canny edge map → Flux input', materials: 'Canny edges, Flux', layout: 'half-right' }
+            ]
+        },
+        {
             //is description too long? or proccess first for recruiter?
             id: 'speculum-cerebri',
             title: 'Speculum Cerebri',
@@ -433,7 +537,6 @@ window.projects = {
 };
 
 //next steps
-//remove typing feaature
 //fill in project descriptions
 //add code that says if there is no information, do not show that section (on page or in menu)
 //fix image sizes
