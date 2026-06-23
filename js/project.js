@@ -10,11 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Find Project
+    // Find Project (merge entries listed under multiple categories)
     let project = null;
     if (window.projects) {
-        const allProjects = Object.values(window.projects).flat();
-        project = allProjects.find(p => p.id === projectId);
+        const matches = Object.values(window.projects).flat().filter(p => p.id === projectId);
+        if (matches.length > 0) {
+            project = {
+                ...matches[0],
+                mediums: [...new Set(matches.map(p => p.medium))]
+            };
+        }
     }
 
     if (!project) {
@@ -26,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.title = `${project.title} | Noah Levy`;
 
     // Render Content
-    const dotClass = getDotClass(project.medium);
+    const mediumDetails = formatMediumsWithDots(project.mediums || [project.medium]);
 
     // Build images gallery HTML and separate out images for lightbox
     let galleryHTML = '';
@@ -105,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <h1 class="project-title-large">${project.title}</h1>
             <div class="project-meta-large">
                 <span>
-                    <span class="medium-dot ${dotClass}"></span>${project.medium}
+                    ${mediumDetails}
                 </span>
                 <span>${project.year}</span>
             </div>
@@ -225,6 +230,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Helper for dots
+    function formatMediumsWithDots(mediums) {
+        const order = ['Photography', 'Printmaking', 'Technology'];
+        const tags = [...mediums]
+            .sort((a, b) => order.indexOf(a) - order.indexOf(b))
+            .map(m => `<span class="medium-tag"><span class="medium-dot ${getDotClass(m)}"></span>${m}</span>`)
+            .join('');
+        return `<span class="medium-tags">${tags}</span>`;
+    }
+
     function getDotClass(medium) {
         const lower = medium.toLowerCase();
         if (lower === 'photography') return 'dot-photography';

@@ -11,8 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize
     if (window.projects) {
-        // Flatten the projects object into an array
-        allProjects = Object.values(window.projects).flat().sort((a, b) => b.year - a.year);
+        const projectMap = new Map();
+        Object.values(window.projects).flat().forEach(project => {
+            if (projectMap.has(project.id)) {
+                const existing = projectMap.get(project.id);
+                if (!existing.mediums.includes(project.medium)) {
+                    existing.mediums.push(project.medium);
+                }
+            } else {
+                projectMap.set(project.id, { ...project, mediums: [project.medium] });
+            }
+        });
+        allProjects = Array.from(projectMap.values()).sort((a, b) => b.year - a.year);
 
         if (gridContainer) {
             renderGrid(allProjects);
@@ -28,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
         data.forEach(project => {
             // Check filters
             if (currentYearFilter !== 'all' && String(project.year) !== String(currentYearFilter)) return;
-            if (currentMediumFilter !== 'all' && project.medium !== currentMediumFilter) return;
+            const mediums = project.mediums || [project.medium];
+            if (currentMediumFilter !== 'all' && !mediums.includes(currentMediumFilter)) return;
 
             const card = document.createElement('a');
             card.href = project.url || '#';
@@ -38,8 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.target = "_blank";
             }
 
-            // Determine dot class
-            const dotClass = getDotClass(project.medium);
+            const mediumDetails = formatMediumsWithDots(mediums);
 
             card.innerHTML = `
                 <div class="card-image-wrapper">
@@ -48,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="card-info">
                     <span class="card-title">${project.title}</span>
                     <span class="card-details">
-                        <span class="medium-dot ${dotClass}"></span>${project.medium} · ${project.year}
+                        ${mediumDetails} · ${project.year}
                     </span>
                 </div>
             `;
@@ -66,8 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Extract unique years and sort descending
         const years = [...new Set(data.map(p => p.year))].sort((a, b) => b - a);
-        // Extract unique media and sort component-wise
-        const media = [...new Set(data.map(p => p.medium))].sort();
+        // Extract unique media from all medium tags (including multi-category projects)
+        const media = [...new Set(data.flatMap(p => p.mediums || [p.medium]))].sort();
 
         // Render Year Filters
         // Year filters generally don't have dots in your example, but we can add if needed. 
@@ -146,6 +156,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const buttons = container.querySelectorAll('.filter-btn');
         buttons.forEach(b => b.classList.remove('active'));
         activeBtn.classList.add('active');
+    }
+
+    function formatMediumsWithDots(mediums) {
+        const order = ['Photography', 'Printmaking', 'Technology'];
+        const tags = [...mediums]
+            .sort((a, b) => order.indexOf(a) - order.indexOf(b))
+            .map(m => `<span class="medium-tag"><span class="medium-dot ${getDotClass(m)}"></span>${m}</span>`)
+            .join('');
+        return `<span class="medium-tags">${tags}</span>`;
     }
 
     function getDotClass(medium) {
