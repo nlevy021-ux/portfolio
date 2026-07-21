@@ -608,6 +608,142 @@ window.projects = {
                 },
             ]
         }
+    ],
+    designEngineering: [
+{
+            id: 'attention-mvp',
+            title: 'FocusMap',
+            year: '2026',
+            medium: 'Design Engineering',
+            image: 'assets/attention-mvp/cover.png',
+            description: 'Webcam comprehension-gap tool: 7-point gaze calibration, 6×10 dwell grid, blink logging, and reports that surface missed coverage and stuck spots for study, accessibility, and high-stakes documents.',
+            detailedDescription: `
+                <p><strong>Problem:</strong> Finishing a page does not mean the information landed. People skip sections, skim past dense passages, or stall without realizing what they missed, whether studying, reading as an older adult, or reviewing contracts and medical instructions. Without a lab eye tracker, there is no lightweight way to see where comprehension may break down.</p>
+
+                <p><strong>Solution:</strong> FocusMap maps webcam gaze onto a document page so you can see coverage gaps and dwell hotspots: signals for missed information and places that may need re-reading. After calibration, dwell time accumulates on a 6×10 region grid, blinks are counted, and a report flags low-coverage rows and long-dwell cells. The UI shows the page, live heatmap, metrics sidebar, and camera preview. Target uses include study feedback, support for elderly readers, and review of important documents.</p>
+
+                <p><strong>How it was built:</strong> v1 uses Processing + OpenCV (face cascade → eyes in face crop → gaze estimate). v2 moves sensing to Python MediaPipe Face Landmarker (iris-based gaze, EAR blink, confidence) and streams <code>/gazeX</code>, <code>/gazeY</code>, <code>/blink</code>, <code>/confidence</code> over OSC into the same Processing UI for calibration, heatmap, and reporting. Seven calibration targets map eye-relative samples to page coordinates; only samples above a confidence floor are used. Reports write dwell matrices and rule-based flags to disk.</p>
+            `,
+            work: 'Comprehension-gap sensing: OpenCV and MediaPipe gaze paths, 7-point calibration, 6×10 dwell heatmap, blink timeline, missed-coverage flags, and session export.',
+            process: `
+                <p><strong>1. Region model:</strong> Split the page into a 6×10 grid (60 cells). Every valid gaze sample adds milliseconds to one cell and logs region changes, so uncovered cells map to likely missed information.</p>
+
+                <p><strong>2. Calibration:</strong> Seven on-page targets; collect eye-relative samples above confidence threshold; fit mapping from camera eye position → normalized page (x, y).</p>
+
+                <p><strong>3. Sensing backends:</strong> OpenCV cascade pipeline inside Processing, or MediaPipe Face Landmarker in Python over OSC. Same product UI either way.</p>
+
+                <p><strong>4. Outputs:</strong> Live dwell heatmap + blink count; saved report with dwell matrix and flags (low coverage = possible miss; long dwell = stuck / needs re-read). Usable as a study tool, accessibility aid for elderly readers, or checklist for important documents.</p>
+            `,
+            url: 'project.html?id=attention-mvp',
+            images: [
+                { url: 'assets/attention-mvp/cover.png', title: 'Gaze Scan Path', materials: 'Fixations + scan path · cover visual', layout: 'full' },
+                { url: 'assets/attention-mvp/grid-method.png', title: 'How It Works: Region Grid', materials: '6×10 dwell cells · 7-point calibration targets', layout: 'full' },
+                { url: 'assets/attention-mvp/interface.png', title: 'Live Tracking UI', materials: 'Heatmap · metrics sidebar · camera preview', layout: 'full' },
+                { url: 'assets/attention-mvp/interface-report.png', title: 'Coverage Report UI', materials: 'Session export · flags · row coverage', layout: 'full' }
+            ]
+        },
+{
+            id: 'ai-speech-rater',
+            title: 'AI Speech Rater',
+            year: '2026',
+            medium: 'Design Engineering',
+            image: 'assets/ai-speech-rater/ui.png',
+            description: 'Live speech-emotion feedback: I fine-tuned wav2vec2 on CREMA-D (~73% validation accuracy), then built a Streamlit app that coaches from short mic chunks.',
+            detailedDescription: `
+                <p><strong>Problem:</strong> Emotional tone in conversation is easy to miss in the moment. Most speech tools do transcription or offline analysis. They do not give continuous, low-latency feedback you can use while speaking or listening.</p>
+
+                <p><strong>Solution:</strong> AI Speech Rater listens in 3-second windows, predicts emotion, and speaks a short coaching cue when confidence is high enough (for example, soften your tone or add warmth). The goal is awareness and response, not clinical labeling.</p>
+
+                <p><strong>How it was built:</strong> I prepared the CREMA-D speech-emotion dataset and split validation by actor so the model was tested on speakers it had not heard. I fine-tuned <code>facebook/wav2vec2-base</code> for six emotion classes (anger, disgust, fear, happy, neutral, sad). The best checkpoint reached about <strong>72.8% validation accuracy</strong> and <strong>0.73 macro-F1</strong>. I then wrapped that model in a Streamlit app: capture mic audio at 16 kHz, classify each chunk, show confidence live, and speak coaching through local TTS when the score clears a threshold.</p>
+            `,
+            work: 'Fine-tuned wav2vec2 on CREMA-D (~72.8% val accuracy), then shipped a Streamlit loop for live mic classify + spoken coaching.',
+            process: `
+                <p><strong>1. Dataset:</strong> Organized CREMA-D clips by emotion. Held out ~20% of actors for validation so accuracy measures new voices, not memorized ones.</p>
+
+                <p><strong>2. Fine-tuning:</strong> Started from <code>facebook/wav2vec2-base</code>. Trained a speech emotion classifier with the Hugging Face Trainer for 10 epochs. Kept the best checkpoint (step 6714, epoch 9) at ~72.8% accuracy / 0.73 macro-F1. Later epochs got slightly worse, so that earlier checkpoint is what the demo uses.</p>
+
+                <p><strong>3. Product loop:</strong> Streamlit app records 3 seconds of audio, runs the fine-tuned model, updates the UI, and if confidence is high enough, speaks a short coaching phrase (angry / happy / neutral / sad).</p>
+
+                <p><strong>4. Reliability:</strong> A confidence gate cuts noisy feedback. If local weights are missing, the app can fall back to a public emotion model so demos still run.</p>
+            `,
+            url: 'project.html?id=ai-speech-rater',
+            images: [
+                { url: 'assets/ai-speech-rater/ui.png', title: 'AI Speech Rater — Live Session', materials: 'Streamlit · wav2vec2 · local TTS', layout: 'full' },
+                { url: 'assets/ai-speech-rater/pipeline.png', title: 'System Pipeline', materials: 'Mic → wav2vec2 → emotion → coaching', layout: 'full' }
+            ]
+        },
+{
+            id: 'straightup',
+            title: 'StraightUP',
+            year: '2026',
+            medium: 'Design Engineering',
+            image: 'assets/straightup/pipeline.png',
+            description: 'Passive desk posture coaching: screen-based feedback that improves posture without wearables that weaken muscles or alerts that pull you off task.',
+            detailedDescription: `
+                <p><strong>Problem:</strong> Bad posture at screens is common and can lead to pain and musculoskeletal issues over time. Existing fixes fall short in two ways. Posture wearables often brace or remind you in ways that can weaken supporting muscles by doing the work for you. Notification-style alerts interrupt focus and get dismissed, so they distract from the task instead of fixing the habit.</p>
+
+                <p><strong>Solution:</strong> StraightUP improves posture passively through the workstation itself. Using the camera, it tracks lean, neck angle, and shoulder tilt against your personal baseline, then gently changes the environment (screen dimming, ambient overlay, optional hardware) so you correct yourself without a buzzing wearable or a popup that breaks flow. The point is continuous, low-friction feedback that keeps muscles engaged and attention on work.</p>
+
+                <p><strong>How it was built:</strong> Camera frames to MediaPipe pose landmarks to deterministic angle metrics to baseline/normalization to a smoothed intensity signal. Software feedback uses a Tk fullscreen overlay (click-through on macOS) with alert threshold, flash, and optional chime; face-proximity mode uses face scale vs baseline as the lean-in signal. Hardware modes include <code>spine_blend</code> and <code>hunch_push</code> with rate limits. Config is JSON; systemd supports always-on Pi deploy. Repo: <a href="https://github.com/Theldor/project-1" target="_blank" rel="noopener">Theldor/project-1</a>.</p>
+            `,
+            work: 'Passive posture system: MediaPipe metrics, calibration, signal mapping, ambient overlay/brightness feedback, and optional servo/stepper output on Raspberry Pi.',
+            process: `
+                <p><strong>1. Sensing:</strong> Webcam or Picamera2 + MediaPipe Pose. Compute lean, neck (with upper-body fallback), and shoulder tilt; drop low-visibility frames.</p>
+
+                <p><strong>2. Personalization:</strong> Capture upright baseline; deadband + normalize to ±1 so one mapping works across users and camera distances.</p>
+
+                <p><strong>3. Mapping:</strong> Smooth intensity 0 to 1. Drive overlay opacity / brightness, or hardware angles (<code>spine_blend</code>, <code>hunch_push</code>) with max deg/sec limits.</p>
+
+                <p><strong>4. Product behavior:</strong> Gradual ambient dim first, then stronger overlay only if posture stays off. Same runtime for laptop demo and Pi deployment. Feedback stays in the environment so you self-correct without a distracting alert stream or a brace that replaces muscle work.</p>
+            `,
+            url: 'project.html?id=straightup',
+            images: [
+                { url: 'assets/straightup/demo.mp4', title: 'StraightUP — Live Demo', materials: 'Screen recording · overlay feedback runtime', layout: 'full', type: 'video-file' },
+                { url: 'assets/straightup/fix-posture-alert.png', title: 'Alert State — FIX POSTURE', materials: 'Fullscreen overlay · threshold + flash', layout: 'full' },
+                { url: 'assets/straightup/pipeline.png', title: 'Posture Feedback System', materials: 'Camera → MediaPipe → metrics → overlay / actuators', layout: 'full' }
+            ]
+        },
+{
+            id: 'heai',
+            title: 'HeAI',
+            year: '2026',
+            medium: 'Design Engineering',
+            image: 'assets/heai/heai-results.png',
+            description: 'Post-op wound triage: I trained EfficientNet models on SurgWound to score healing and infection risk, then built a patient app for daily photo check-ins and clear on-track / watch / alert results.',
+            detailedDescription: `
+                <p><strong>Problem:</strong> After surgery, patients go home without daily clinical review. It is hard to know which wound changes are normal healing and which are warning signs, and it is equally hard to communicate that clearly to a doctor between visits. People lack a structured way to capture a photo, report symptoms, and share a simple on-track / watch / alert signal with their care team. Consumer photo apps are not built for triage; hospital tools are not built for the kitchen table.</p>
+
+                <p><strong>Solution:</strong> HeAI is a wound-assessment product with two parts: computer-vision models that score healing status and infection risk from a photo, and a patient app for onboarding, guided capture, symptom survey, triage result, and timeline. The output is triage (on track, watch closely, or alert care), not a diagnosis.</p>
+
+                <p><strong>How it was built:</strong></p>
+                <ol>
+                    <li><strong>Data:</strong> Started with the SurgWound dataset of surgical wound photos. Cleaned it down to 686 labeled images and removed unclear infection labels.</li>
+                    <li><strong>Training:</strong> Fine-tuned two EfficientNet-B1 image models. One answers “is this wound healed?” The other answers “is infection risk low or elevated?”</li>
+                    <li><strong>Testing:</strong> Measured both models on photos they never saw during training. Healing was correct <strong>73.8%</strong> of the time. Infection risk was correct <strong>89.3%</strong> of the time. I then adjusted the infection cutoff so the model catches more elevated-risk cases (from about half of them to about 61%), because missing a concerning wound is worse than an extra cautious alert.</li>
+                    <li><strong>Product:</strong> Built a tool that scores a single wound photo, plus a React app where a patient takes a guided photo, answers a short symptom survey, and gets a clear result: on track, watch closely, or alert care.</li>
+                </ol>
+
+                <p><em>Scope:</em> Trained on SurgWound surgical imagery only. Not for clinical or diagnostic use.</p>
+            `,
+            work: 'Trained two EfficientNet wound models on SurgWound (73.8% healing / 89.3% infection accuracy), then built the HeAI photo check-in app.',
+            process: `
+                <p><strong>1. Prepare the data:</strong> Clean SurgWound labels, keep 686 clear cases, and lock a fixed train / test split so scores are fair.</p>
+
+                <p><strong>2. Train two models:</strong> EfficientNet-B1 for healing status, and EfficientNet-B1 for infection risk (low vs elevated).</p>
+
+                <p><strong>3. Measure and tune:</strong> Healing accuracy 73.8%. Infection accuracy 89.3%. Raise the sensitivity for elevated risk so more true warning cases are caught (~50% → ~61%).</p>
+
+                <p><strong>4. Ship the product loop:</strong> Score a photo → show the patient a triage result in the app (on track / watch closely / alert care).</p>
+            `,
+            url: 'project.html?id=heai',
+            images: [
+                { url: 'assets/heai/heai-results.png', title: 'HeAI: Triage Result', materials: 'React, Vite, Tailwind · Product UX', layout: 'half-left' },
+                { url: 'assets/heai/heai-camera.png', title: 'HeAI: Guided Capture', materials: 'Camera overlay · alignment & lighting cues', layout: 'half-right' },
+                { url: 'assets/heai/pipeline.png', title: 'System Pipeline', materials: 'Photo → EfficientNet-B1 → triage → app', layout: 'full' },
+                { url: 'assets/heai/metrics.png', title: 'Test-Set Performance', materials: 'Accuracy = overall correct calls · Macro-F1 = balanced across both classes', layout: 'full' }
+            ]
+        }
+
     ]
 };
 

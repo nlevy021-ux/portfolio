@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Printmaking | Noah Levy</title>
+    <title>Design Engineering | Noah Levy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@700&display=swap"
@@ -24,9 +24,9 @@
                 <div class="nav-links-static">
                     <a href="index.html">All Work</a>
                     <a href="photography.html">Photography</a>
-                    <a href="printmaking.html" class="active" style="font-weight: 600;">Printmaking</a>
+                    <a href="printmaking.html">Printmaking</a>
                     <a href="technology.html">Technology</a>
-                    <a href="design-engineering.html">Design Engineering</a>
+                    <a href="design-engineering.html" class="active" style="font-weight: 600;">Design Engineering</a>
                     <a href="about.html">About</a>
                 </div>
             </nav>
@@ -34,7 +34,7 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="project-grid" id="print-grid">
+            <div class="project-grid" id="design-engineering-grid">
                 <!-- Populated by JS -->
             </div>
         </main>
@@ -44,8 +44,8 @@
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const grid = document.getElementById('print-grid');
-            const projects = (window.projects && window.projects.printmaking) || [];
+            const grid = document.getElementById('design-engineering-grid');
+            const projects = (window.projects && window.projects.designEngineering) || [];
 
             projects.forEach(project => {
                 const card = document.createElement('a');

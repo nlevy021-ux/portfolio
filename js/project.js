@@ -43,6 +43,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const url = typeof img === 'string' ? img : img.url;
             const layoutClass = (typeof img !== 'string' && img.layout) ? img.layout : 'full';
             const isVideo = typeof img !== 'string' && img.type === 'video';
+            const isLocalVideo = typeof img !== 'string' && img.type === 'video-file';
+
+            if (isLocalVideo) {
+                return `
+                        <div class="gallery-item ${layoutClass}">
+                            <video
+                                src="${url}"
+                                controls
+                                playsinline
+                                preload="metadata"
+                                title="${img.title || project.title}"
+                                style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;">
+                            </video>
+                        </div>
+                    `;
+            }
 
             if (isVideo) {
                 return `
@@ -231,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Helper for dots
     function formatMediumsWithDots(mediums) {
-        const order = ['Photography', 'Printmaking', 'Technology'];
+        const order = ['Photography', 'Printmaking', 'Technology', 'Design Engineering'];
         const tags = [...mediums]
             .sort((a, b) => order.indexOf(a) - order.indexOf(b))
             .map(m => `<span class="medium-tag"><span class="medium-dot ${getDotClass(m)}"></span>${m}</span>`)
@@ -244,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lower === 'photography') return 'dot-photography';
         if (lower === 'printmaking') return 'dot-printmaking';
         if (lower === 'technology') return 'dot-technology';
+        if (lower === 'design engineering') return 'dot-design-engineering';
         return 'dot-all';
     }
 

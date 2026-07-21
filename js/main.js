@@ -39,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Check filters
             if (currentYearFilter !== 'all' && String(project.year) !== String(currentYearFilter)) return;
             const mediums = project.mediums || [project.medium];
+            // Design Engineering only appears when that medium filter is selected
+            if (mediums.includes('Design Engineering') && currentMediumFilter !== 'Design Engineering') return;
             if (currentMediumFilter !== 'all' && !mediums.includes(currentMediumFilter)) return;
 
             const card = document.createElement('a');
@@ -77,7 +79,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Extract unique years and sort descending
         const years = [...new Set(data.map(p => p.year))].sort((a, b) => b - a);
         // Extract unique media from all medium tags (including multi-category projects)
-        const media = [...new Set(data.flatMap(p => p.mediums || [p.medium]))].sort();
+        const mediumOrder = ['Photography', 'Printmaking', 'Technology', 'Design Engineering'];
+        const media = [...new Set(data.flatMap(p => p.mediums || [p.medium]))]
+            .sort((a, b) => {
+                const ai = mediumOrder.indexOf(a);
+                const bi = mediumOrder.indexOf(b);
+                return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+            });
 
         // Render Year Filters
         // Year filters generally don't have dots in your example, but we can add if needed. 
@@ -159,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function formatMediumsWithDots(mediums) {
-        const order = ['Photography', 'Printmaking', 'Technology'];
+        const order = ['Photography', 'Printmaking', 'Technology', 'Design Engineering'];
         const tags = [...mediums]
             .sort((a, b) => order.indexOf(a) - order.indexOf(b))
             .map(m => `<span class="medium-tag"><span class="medium-dot ${getDotClass(m)}"></span>${m}</span>`)
@@ -172,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lower === 'photography') return 'dot-photography';
         if (lower === 'printmaking') return 'dot-printmaking';
         if (lower === 'technology') return 'dot-technology';
+        if (lower === 'design engineering') return 'dot-design-engineering';
         return 'dot-all';
     }
 });
