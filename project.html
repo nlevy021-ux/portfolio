@@ -7,9 +7,18 @@
     <title>Project | Noah Levy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script>
+        (function () {
+            var id = new URLSearchParams(window.location.search).get('id');
+            var productIds = ['f1-eeg', 'switchboard', 'attention-mvp', 'heai', 'straightup', 'ai-speech-rater'];
+            if (productIds.indexOf(id) !== -1) {
+                document.documentElement.classList.add('product-pending');
+            }
+        })();
+    </script>
     <style>
         .project-detail-container {
             width: 100%;
@@ -369,12 +378,12 @@
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <a href="index.html" class="logo">NOAH LEVY</a>
+                <a href="art.html" class="logo">NOAH LEVY</a>
             </div>
 
             <nav class="filter-nav">
                 <div class="nav-links-static">
-                    <a href="index.html">← Back to Projects</a>
+                    <a href="art.html">← Work</a>
                     
                     <div class="page-nav">
                         <span class="page-nav-label">On This Page</span>
@@ -385,6 +394,7 @@
                     
                     <div style="margin-top: 40px;">
                         <a href="about.html">About</a>
+                        <a href="product.html" class="crossover-link">View Product Work</a>
                     </div>
                 </div>
             </nav>

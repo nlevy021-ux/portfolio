@@ -4,77 +4,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Noah Levy</title>
+    <title>About | Noah Levy — Product Design</title>
+    <meta name="description"
+        content="Product designer for complex software interfaces. AI product systems, interaction design, and a studio practice in visual perception.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Specific page styles can go here if needed */
-        .about-content {
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .bio-text {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #333;
-        }
-
-        .contact-info {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-    </style>
 </head>
 
-<body>
-    <div class="layout-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <a href="index.html" class="logo">NOAH LEVY</a>
-            </div>
+<body class="product-mode">
+    <header class="product-topbar">
+        <a href="product.html" class="logo">NOAH LEVY</a>
+        <nav class="product-topbar-nav" aria-label="Product">
+            <a href="product.html">Work</a>
+            <a href="about.html" class="active">About</a>
+            <a href="art.html" class="crossover-link">View Art Practice</a>
+        </nav>
+    </header>
 
-            <nav class="filter-nav">
-                <div class="nav-links-static">
-                    <a href="index.html">All Work</a>
-                    <a href="photography.html">Photography</a>
-                    <a href="printmaking.html">Printmaking</a>
-                    <a href="technology.html">Technology</a>
-                    <a href="design-engineering.html">Design Engineering</a>
-                    <a href="about.html" class="active" style="font-weight: 600;">About</a>
-                </div>
-            </nav>
-        </aside>
+    <main class="product-main product-about">
+        <p class="product-kicker">About</p>
+        <h1 class="about-title">Noah Levy</h1>
+        <div class="bio-text">
+            <p>
+                I design software interfaces for dense, high-stakes workflows—turning ambiguous goals and model
+                output into clear actions operators can trust.
+            </p>
+            <p>
+                My background spans interaction design, applied machine learning, and a studio practice in
+                photography and perception. That mix is the point: I treat AI as a product surface, not a
+                novelty, and I use visual systems thinking to simplify complexity without sanding off power.
+            </p>
+            <p>
+                Recent work includes cognitive telemetry for racing, routing and comparison tools for
+                multi-path plans, gaze-based reading feedback, post-op wound triage, and live speech
+                coaching—each built end-to-end from problem framing through interaction design and working UI.
+            </p>
+        </div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="about-content">
-                <h1 style="font-family: 'Outfit'; margin-bottom: 20px;">About Me</h1>
-                <p class="bio-text">
-                    I am a multidisciplinary artist and design engineer working at the intersection of physical form, digital systems, and human perception.
+        <div class="skills-band">
+            <h2 class="skills-label">Focus</h2>
+            <ul class="skills-list">
+                <li>Interaction &amp; visual design for data-dense products</li>
+                <li>AI → usable interface (triage, feedback, decision support)</li>
+                <li>Prototyping &amp; front-end implementation (HTML/CSS/JS, React)</li>
+                <li>Python / ML product loops (vision, audio, sensing)</li>
+            </ul>
+        </div>
 
-                    With a background in photography, printmaking, creative coding, and applied machine learning, I build projects that move between material and computational spaces—from studio work to product systems that turn models into usable interfaces.
-
-                    My work investigates how perception is structured: how repetition creates meaning, how systems influence attention, and how digital processes alter our sense of authorship and reality. Across mediums, I examine the tension between order and chaos to question what feels stable, constructed, or true.
-                </p>
-
-                <div class="contact-info">
-                    <h2 style="font-size:1.2rem; margin-bottom:10px;">Contact</h2>
-                    <p>Email: nlevy021@gmail.com</p>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script src="js/data.js"></script>
-    <script src="js/main.js"></script>
+        <div class="contact-info">
+            <h2 class="skills-label">Contact</h2>
+            <p><a href="mailto:nlevy021@gmail.com">nlevy021@gmail.com</a></p>
+        </div>
+    </main>
 </body>
 
 </html>

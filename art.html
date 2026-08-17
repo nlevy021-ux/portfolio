@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Practice | Noah Levy</title>
+    <meta name="description"
+        content="Photography, printmaking, and interactive work about perception, representation, and systems of seeing.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="layout-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="art.html" class="logo">NOAH LEVY</a>
+                <p class="brand-tagline">Photography, printmaking, and systems of seeing.</p>
+            </div>
+
+            <nav class="filter-nav">
+                <div class="filter-group">
+                    <h3>Medium</h3>
+                    <ul id="medium-filters"></ul>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Year</h3>
+                    <ul id="year-filters"></ul>
+                </div>
+
+                <div class="nav-links-static">
+                    <a href="photography.html">Photography</a>
+                    <a href="printmaking.html">Printmaking</a>
+                    <a href="technology.html">Technology</a>
+                    <a href="about.html">About</a>
+                    <a href="product.html" class="crossover-link">View Product Work</a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div id="project-grid" class="project-grid"></div>
+        </main>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
