@@ -628,8 +628,8 @@ window.projects = {
             description: 'An EEG-powered racing system that reveals a driver’s focus in real time and how it shapes performance on track.',
             overview: `<p>An EEG-powered racing system that reveals a driver’s focus in real time and how it shapes performance on track.</p>`,
             problem: `<p>Formula 1 captures extensive data on the car, including speed, braking, tires, steering, and lap time, but it cannot show what is happening with the driver. Changes in focus or cognitive load can affect performance before a mistake occurs, yet remain invisible in traditional performance data.</p>`,
-            users: `<p><strong>Driver:</strong> Understand how focus and cognitive load translate to on-track performance, review post-race patterns, and use cognitive training to improve consistency across laps and stints.</p>
-                <p><strong>Pit wall:</strong> Monitor the driver’s cognitive state during a race to inform strategy, anticipate performance changes and lap times, and analyze how mental load affected the race afterward.</p>`,
+            users: `<p><strong>Driver:</strong> Needs to see how focus and cognitive load translate to on-track performance, review post-race patterns, and train for more consistent laps and stints.</p>
+                <p><strong>Pit wall:</strong> Needs to monitor the driver’s cognitive state during a race to inform strategy, anticipate performance changes, and analyze how mental load affected the result afterward.</p>`,
             url: 'project.html?id=f1-eeg',
             buildImages: [
                 { url: 'assets/f1-eeg/pipeline.png', title: 'Technical Pipeline', materials: 'Acquire → clean → window → calculate → calibrate → aggregate → publish', layout: 'full' }
@@ -655,11 +655,9 @@ window.projects = {
             description: 'StraightUP is a passive posture-correcting interface that turns the workstation itself into feedback.',
             overview: `<p>StraightUP is a passive posture-correcting interface that turns the workstation itself into feedback. As a person leans toward the screen, the page gradually darkens, making posture visible without interrupting the task.</p>`,
             problem: `<p>Long periods of poor posture at a screen can contribute to neck and back pain, muscle strain, reduced mobility, and longer-term musculoskeletal issues. Existing tools often rely on wearables, braces, or frequent notifications, which can be restrictive, disruptive, or easy to ignore.</p>`,
-            users: `<ul>
-                <li>Desk workers and students who spend long periods at a computer and need subtle, continuous posture feedback without pausing their work.</li>
-                <li>Physical therapy patients who need support maintaining posture habits between appointments, when clinicians cannot provide real-time guidance.</li>
-                <li>Ergonomics and workplace wellness teams who want a lightweight way to encourage healthier desk habits without requiring employees to wear specialized devices.</li>
-            </ul>`,
+            users: `<p><strong>Desk workers and students:</strong> Need subtle, continuous posture feedback during long computer sessions, without pausing their work.</p>
+                <p><strong>Physical therapy patients:</strong> Need support maintaining posture habits between appointments, when clinicians cannot provide real-time guidance.</p>
+                <p><strong>Workplace wellness teams:</strong> Need a lightweight way to encourage healthier desk habits without requiring employees to wear specialized devices.</p>`,
             build: `<p>StraightUP uses a standard webcam and a Python computer-vision pipeline built with MediaPipe Pose and OpenCV. At setup, the user sits upright for several seconds while the system records a personal posture baseline from facial and upper-body landmarks, including head position, shoulder alignment, neck angle, and torso lean.</p>
                 <p>Each incoming camera frame is compared against that baseline to detect forward head movement, hunching, and leaning toward the screen. The raw measurements are smoothed over time to prevent momentary movements from triggering feedback. They are then combined into a single posture-intensity value from 0 to 1.</p>
                 <p>That value controls the interface in real time: mild drift gradually dims the page, sustained poor posture brings forward the FIX POSTURE prompt, and returning to baseline restores the workspace. A live spine visualization mirrors the same landmark data so users can see the feedback loop during testing.</p>`,
@@ -674,26 +672,35 @@ window.projects = {
             caseStudy: true,
             kicker: 'News desk',
             role: 'PM, Technical Architect',
-            focus: 'Market intelligence',
-            stack: ['React', 'FastAPI', 'Postgres', 'Gemini'],
+            focus: 'AI-powered intelligence systems',
+            stack: ['Python', 'FastAPI', 'Postgres', 'React', 'LLM APIs'],
             plate: 'bleed',
             stage: '#e8eef4',
-            image: 'assets/news-dashboard/poster.jpg',
-            heroVideo: 'assets/news-dashboard/demo.mp4',
+            image: 'assets/news-dashboard/poster.jpg?v=crop',
+            heroVideo: 'assets/news-dashboard/demo.mp4?v=crop',
             imagePosition: 'center top',
-            indexLine: 'Industry and client news, ranked for a desk.',
-            description: 'A market-intelligence desk that ingests industry and client coverage, ranks what matters, and delivers it in a feed, a company workspace, and a personalized briefing.',
-            overview: `<p>A market-intelligence desk that ingests industry and client coverage, ranks what matters, and delivers it in a feed, a company workspace, and a personalized briefing.</p>`,
-            problem: `<p>Leadership stays current on industry and client news through slow manual research or expensive third-party platforms. Material developments—a filing, a leadership change, a loss ratio move—sit in the same firehose as explainers and thought leadership, so desks either miss what matters or spend hours assembling the same brief.</p>`,
-            users: `<p>Stakeholders tracking industry, clients, and competitors who need a watchlist-driven desk, not a generic news homepage.</p>
-                <p>No manual curation. Ingest runs on a schedule. Personalization comes from followed companies, segments, and lines of business. Claims in briefs have to stay grounded in sources.</p>`,
+            indexLine: 'Turns scattered coverage into a ranked feed, company workspace, and briefing.',
+            description: 'An insurance-industry intelligence platform that turns scattered news, filings, and client coverage into a ranked feed, company workspace, and personalized briefing.',
+            overview: `<p>An insurance-industry intelligence platform that turns scattered news, filings, and client coverage into a ranked feed, company workspace, and personalized briefing.</p>`,
+            problem: `<p>Insurance leaders need to stay current on client, competitor, and industry developments, but the process often depends on time-consuming manual research or expensive third-party platforms. Material events, such as leadership changes, financial results, regulatory filings, and catastrophic-loss updates, appear alongside opinion pieces and general news. Teams either spend hours assembling the same brief or risk missing what matters.</p>`,
+            users: `<p><strong>Coverage desks:</strong> Need one watchlist-driven workspace for client, competitor, and industry coverage rather than a generic news feed.</p>
+                <p><strong>Insurance stakeholders:</strong> Need a clear view of the most relevant developments, with source-grounded summaries and context they can act on without repeating research already done elsewhere.</p>`,
+            build: `<p>The platform ingests public RSS feeds and SEC filings, cleans full article text, and stores stories in Postgres. A deterministic processing pipeline then removes duplicates, extracts companies and people, identifies categories and sectors, distinguishes news from opinion, and calculates a relevance score for every story.</p>
+                <p>The relevance score combines source authority, recency, tracked-client matches, keywords, category, sector, and independent corroboration. It clusters coverage of the same event across outlets, counting distinct source owners rather than repeated wire stories as confirmation.</p>
+                <p>LLMs are used selectively as editors rather than as the core system. A relevance agent re-ranks the strongest stories for the weekly digest, while a separate breaking-news agent evaluates only high-priority candidates flagged by the deterministic system. Confidence thresholds, cached results, and a daily spend limit keep the platform reliable, reproducible, and low-cost.</p>
+                <p>The same database powers three delivery surfaces: a React dashboard for search, filters, saved views, and company research; Slack digests and breaking alerts; and personalized email briefings based on each user’s watchlist and schedule.</p>`,
             url: 'project.html?id=news-dashboard',
-            buildImages: [
-                { url: 'assets/news-dashboard/mi-pipeline.png', title: 'Intelligence pipeline', materials: 'Ingest → normalize → triage → LLM agents → desk surfaces', layout: 'full' }
-            ],
             images: [
-                { url: 'assets/news-dashboard/mi-feed.png?v=live', title: 'News', materials: 'Feed · why it matters · impact', layout: 'full' },
-                { url: 'assets/news-dashboard/mi-company.png?v=live', title: 'Company', materials: 'Profile · financials · intelligence brief', layout: 'full' }
+                { url: 'assets/news-dashboard/mi-feed.png?v=center4', title: 'News feed', materials: 'Headline · why it matters · impact', layout: 'full' },
+                { url: 'assets/news-dashboard/feed-filters.jpg', title: 'News feed', materials: 'Filters · saved views', layout: 'full' },
+                { url: 'assets/news-dashboard/user-config.jpg', title: 'Profile', materials: 'Watchlist · feed preferences', layout: 'full' },
+                { url: 'assets/news-dashboard/email-prefs.jpg', title: 'Profile', materials: 'Email cadence · alerts', layout: 'full' },
+                { url: 'assets/news-dashboard/company-profiles.jpg', title: 'Company dashboard', materials: 'Followed carriers · AI read · compare', layout: 'full' },
+                { url: 'assets/news-dashboard/company-compare.jpg', title: 'Company overview', materials: 'Price vs P&amp;C benchmark · overlay peers', layout: 'full' },
+                { url: 'assets/news-dashboard/company-financials.jpg', title: 'Company financials', materials: 'SEC metrics · trend · customize', layout: 'full' },
+                { url: 'assets/news-dashboard/org-chart.jpg', title: 'Organizational structure', materials: 'Shared roster · upload baseline', layout: 'full' },
+                { url: 'assets/news-dashboard/company-brief.jpg', title: 'Company summary', materials: 'Strategy · evidence · what to watch', layout: 'full' },
+                { url: 'assets/news-dashboard/company-report.jpg', title: 'Filings', materials: 'SEC EDGAR · where coverage lands', layout: 'full' }
             ]
         },
         {
@@ -713,11 +720,9 @@ window.projects = {
             description: 'FocusMap is a webcam-based reading interface that visualizes a reader’s attention across a document.',
             overview: `<p>FocusMap is a webcam-based reading interface that visualizes a reader's attention across a document, helping readers identify skipped sections and passages that may need another review.</p>`,
             problem: `<p>Finishing a page does not necessarily mean it was read carefully. People can skim dense sections, skip lines, or become stuck on a passage without recognizing the pattern afterward. For studying, accessibility, and high-stakes documents such as contracts or medical instructions, readers need a lightweight way to reflect on coverage without specialized eye-tracking hardware.</p>`,
-            users: `<ul>
-                <li>Students who want to identify material they may have skimmed or need to revisit while studying.</li>
-                <li>Older adults and people with cognitive or visual accessibility needs who could benefit from a clearer record of where attention was concentrated or lost.</li>
-                <li>Readers reviewing high-stakes documents who want a final check for sections that received little attention before making a decision or taking action.</li>
-            </ul>`,
+            users: `<p><strong>Students:</strong> Need to identify material they may have skimmed or should revisit while studying.</p>
+                <p><strong>Older adults and readers with accessibility needs:</strong> Need a clearer record of where attention was concentrated or lost.</p>
+                <p><strong>Readers of high-stakes documents:</strong> Need a final check for sections that received little attention before making a decision.</p>`,
             build: `<p>The reader first calibrates the system by looking at seven targets positioned across the page. This creates a mapping between facial landmark movements from the webcam and locations on the document.</p>
                 <p>During reading, MediaPipe Face Landmarker estimates face orientation and eye-region movement in Python. The gaze estimate is streamed over OSC into a Processing interface, where it is mapped to a 6 × 10 grid over the page. Each grid cell accumulates dwell time, creating a live heatmap of reading coverage.</p>
                 <p>FocusMap defines focus as sustained, directed visual attention rather than claiming to measure comprehension directly. It combines gaze coverage, dwell time, attention movement across the page, and blink rate to identify patterns in how a reader engages with a document. Stable, progressive coverage and a consistent blink pattern suggest sustained engagement; low-coverage areas, unusually long dwell, or changes in blink rate flag passages that may be worth revisiting.</p>
@@ -750,7 +755,7 @@ window.projects = {
             description: 'Undertone is a discreet, in-ear speech interface that identifies emotional shifts in conversation and delivers a private audio cue through a single earbud.',
             overview: `<p>Undertone is a discreet, in-ear speech interface that identifies emotional shifts in conversation and delivers a private audio cue through a single earbud.</p>`,
             problem: `<p>Much of a conversation’s meaning is carried through tone, not just words. A phrase like “it’s fine” can communicate reassurance, frustration, or sadness depending on how it is said. For people who find these emotional cues difficult to interpret, that information can be easy to miss in real time. Any support also needs to be relayed discreetly, without interrupting the conversation or changing its natural flow.</p>`,
-            users: `<p>Neurodivergent individuals who want optional, real-time support recognizing emotional shifts in everyday and emotionally complex conversations.</p>`,
+            users: `<p><strong>Neurodivergent listeners:</strong> Need optional, real-time support recognizing emotional shifts in conversation, delivered privately without interrupting the exchange.</p>`,
             build: `<p>The system captures room audio through one AirPod and processes it in three-second windows. Each window is passed to a fine-tuned wav2vec2 model, which estimates vocal-affect categories from acoustic qualities of speech such as pitch, rhythm, energy, and vocal quality.</p>
                 <p>Undertone was fine-tuned on the CREMA-D emotional speech dataset using an actor-held-out evaluation split, reaching approximately 72.8% validation accuracy and 0.73 macro F1. A confidence gate discards weak predictions, while a change gate prevents the earbud from repeating the same category continuously.</p>
                 <p>When both conditions are met, local text-to-speech delivers a short cue, such as “This sounds sad,” through the user’s earbud. When the system is uncertain or detects no meaningful shift, it stays silent. Streamlit provided the live prototype environment; the intended product surface is sound through a single earbud.</p>`,
@@ -773,8 +778,7 @@ window.projects = {
             description: 'A planning interface that turns ambiguous goals into comparable routes, paths, and actionable steps—so operators can choose a plan instead of drowning in options.',
             demoUrl: 'https://switchboard-phi.vercel.app/',
             problem: `<p>Ambiguous goals produce too many plausible plans and not enough structure to compare them. People jump between brainstorming, research, and execution without a shared view of routes, tradeoffs, or next steps—so decisions stall or get made on vibe instead of evidence.</p>`,
-            users: `<p>Individuals and small teams planning complex work who need to explore options without losing the thread.</p>
-                <p>The UI has to hold dense branching information (routes → paths → steps → tools) without feeling like a spreadsheet. Comparison must stay scannable.</p>`,
+            users: `<p><strong>Individuals and small teams:</strong> Need to explore branching plans without losing the thread, and compare routes without drowning in options.</p>`,
             build: `<p>Core loop: prompt a goal → generate a <strong>route</strong> → expand into <strong>paths</strong> and <strong>steps</strong> → inspect tools per step → <strong>compare</strong> alternatives → save into <strong>projects</strong>. Progressive disclosure: overview first, step detail on demand, compare modal for tradeoffs.</p>
                 <p>Front-end product surface in React/Vite. The design problem is not “generate text”—it is structuring AI-assisted planning into objects operators can navigate, compare, and commit to.</p>`,
             url: 'project.html?id=switchboard',
@@ -809,8 +813,8 @@ window.projects = {
             indexLine: 'Home wound check-ins with a clear next action.',
             description: 'Post-op wound triage for patients at home: guided photo check-ins and clear on-track / watch / alert results—not a clinical diagnosis.',
             problem: `<p>After surgery, patients go home without daily clinical review. It is hard to know which wound changes are normal and which are warning signs, and harder still to communicate that clearly between visits. Consumer photo apps are not built for triage; hospital tools are not built for the kitchen table.</p>`,
-            users: `<p>Post-op patients capturing daily check-ins; clinicians receiving a simple triage signal, not raw model scores.</p>
-                <p>Trust and false negatives matter more than flashy UI. Lighting and alignment vary at home. Language must say triage, never diagnosis.</p>`,
+            users: `<p><strong>Post-op patients:</strong> Need a clear next action from daily wound check-ins at home.</p>
+                <p><strong>Clinicians:</strong> Need a simple triage signal, not raw model scores.</p>`,
             build: `<p>Onboarding → guided capture with alignment/lighting cues → short symptom survey → triage result (on track / watch closely / alert care) → timeline. The result screen leads with the decision; model internals stay secondary.</p>
                 <p>Two EfficientNet-B1 models on cleaned SurgWound imagery (healing ~73.8%, infection risk ~89.3% on held-out test). Models output scores; the product maps them into three human actions. Research prototype—not for clinical use.</p>`,
             url: 'project.html?id=heai',

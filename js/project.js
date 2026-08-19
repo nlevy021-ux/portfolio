@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <a href="product.html" class="logo">NOAH LEVY</a>
             <nav class="product-topbar-nav" aria-label="Product">
                 <a href="product.html">Work</a>
-                <a href="about.html">About</a>
+                <a href="index.html">About</a>
                 <a href="art.html" class="crossover-link">View Art Practice</a>
             </nav>
         `;
@@ -188,24 +188,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ? `<div class="project-chips">${chips.map(c => `<span class="project-chip">${c}</span>`).join('')}</div>`
         : '';
 
-    const specItems = [];
     const focusLabel = project.focus || project.kicker;
-    if (isCaseStudy) {
-        if (project.role) specItems.push(['Role', project.role]);
-        if (focusLabel) specItems.push(['Focus', focusLabel]);
-        if (project.year) specItems.push(['Year', project.year]);
-        if (project.stack && project.stack.length) specItems.push(['Tools', project.stack.join(', ')]);
-        if (project.liveDemo) {
-            specItems.push(['Demo', `<a class="demo-link" href="#section-overview">Play on this page</a>`]);
-        } else if (project.demoUrl) {
-            specItems.push(['Demo', `<a class="demo-link" href="${project.demoUrl}" target="_blank" rel="noopener">Live site</a>`]);
-        }
-    }
-
-    const specHTML = specItems.length
-        ? `<dl class="product-spec">${specItems.map(([label, value]) =>
-            `<div><dt>${label}</dt><dd>${value}</dd></div>`
-        ).join('')}</dl>`
+    const specHTML = isCaseStudy
+        ? `<dl class="product-spec">
+            <div><dt>Role</dt><dd>${project.role || '—'}</dd></div>
+            <div><dt>Focus</dt><dd>${focusLabel || '—'}</dd></div>
+            <div><dt>Year</dt><dd>${project.year || '—'}</dd></div>
+            <div><dt>Tools</dt><dd>${project.stack && project.stack.length ? project.stack.join(', ') : '—'}</dd></div>
+           </dl>`
         : '';
 
     const liveDemoHTML = project.liveDemo === 'speech-radar'

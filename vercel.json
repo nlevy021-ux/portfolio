@@ -2,13 +2,13 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/design-engineering", "destination": "/product", "permanent": true }
+    { "source": "/design-engineering", "destination": "/product", "permanent": true },
+    { "source": "/about", "destination": "/", "permanent": true }
   ],
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/product", "destination": "/product.html" },
     { "source": "/art", "destination": "/art.html" },
-    { "source": "/about", "destination": "/about.html" },
     { "source": "/photography", "destination": "/photography.html" },
     { "source": "/printmaking", "destination": "/printmaking.html" },
     { "source": "/technology", "destination": "/technology.html" },

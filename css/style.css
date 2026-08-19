@@ -1187,12 +1187,18 @@ body.product-mode ::selection {
 
 .product-spec {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 20px 28px;
+    grid-template-columns: auto auto auto minmax(0, 1fr);
+    column-gap: 56px;
+    align-items: start;
+    width: 100%;
     margin: 28px 0 0;
     padding: 22px 0;
     border-top: 1px solid rgba(23, 23, 23, 0.08);
     border-bottom: 1px solid rgba(23, 23, 23, 0.08);
+}
+
+.product-spec > div {
+    min-width: 0;
 }
 
 .product-spec dt {
@@ -1201,13 +1207,14 @@ body.product-mode ::selection {
     text-transform: uppercase;
     color: #8a8a8a;
     font-weight: 500;
-    margin-bottom: 7px;
+    margin: 0 0 7px;
 }
 
 .product-spec dd {
     font-size: 0.9rem;
     color: #171717;
     margin: 0;
+    padding: 0;
     line-height: 1.45;
 }
 
@@ -1348,6 +1355,12 @@ body.product-mode .project-header {
     margin-top: 12px;
 }
 
+body.product-mode .case-study-content strong {
+    display: inline;
+    margin: 0;
+    font-weight: 600;
+}
+
 body.product-mode .case-study-content ul {
     margin: 0;
     padding-left: 1.15em;
@@ -1486,7 +1499,9 @@ body.product-mode .project-section {
     }
 
     .product-spec {
-        grid-template-columns: 1fr 1fr;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 28px;
     }
 
     .product-tile-row {
