@@ -616,26 +616,84 @@ window.projects = {
             year: '2026',
             medium: 'Design Engineering',
             caseStudy: true,
-            kicker: 'Cognitive telemetry',
-            role: 'Product design',
+            kicker: 'Brain-computer interfaces',
+            role: 'Research, Design, Engineering',
+            focus: 'Brain-computer interfaces',
             stack: ['Python', 'BrainFlow', 'OpenBCI', 'JavaScript'],
             plate: 'bleed',
             stage: '#080a0f',
             image: 'assets/f1-eeg/cover.jpg',
             heroVideo: 'assets/f1-eeg/demo.mp4',
-            indexLine: 'Live driver-focus scores, readable at race speed.',
-            description: 'A cognitive telemetry HUD that turns four-channel EEG into Focus and Capacity scores a driver and pit wall can read during a race—not a raw brainwave feed.',
-            problem: `<p>Formula 1 already measures the car in exhaustive detail—speed, braking, tires, steering, lap time. Cognitive change is largely invisible. A driver can lose focus before a mistake, struggle to hold attention across a stint, or process a high-load sector differently, and none of that shows up in conventional telemetry.</p>`,
-            users: `<p><strong>Users:</strong> the driver, who needs glanceable state while racing; the pit wall, who need to read cognitive change against sectors, lap time, and car data.</p>
-                <p><strong>Constraints:</strong> values have to be readable at race speed, not as charts; scores are personal, not population percentiles; low-quality EEG must never look like cognition; the overlay has to sit on PS5 gameplay as a transparent 1920×1080 HUD without fighting the existing lap UI.</p>`,
-            interaction: `<p>The HUD sits under the existing lap interface and exposes four values: <strong>Focus</strong> (current engagement), experimental <strong>Capacity</strong> (slower-moving readiness), <strong>Sector Focus</strong> (valid windows in the completed sector), and <strong>Sector Δ</strong> (change vs. the previous sector).</p>
-                <p>Focus is the primary live measure; Capacity is supporting context; sector values make change comparable without reading a graph. Status is explicit—BASELINE, CALIBRATE, LIVE, or LowConfidence—so the interface never fills empty scores with fake certainty.</p>`,
-            system: `<p>OpenBCI Ganglion at 200 Hz × 4 channels → bandpass / line-noise clean → quality gate → rolling 2.5 s windows at 2 Hz. Focus uses Pope’s engagement index (β / (α + θ)); Capacity uses the SpecParam aperiodic exponent. Personal calibration maps each signal to 0–100. A shared session clock assigns windows to sectors and publishes one synchronized state to the HUD. Bad windows are hidden, not interpolated. Raw and derived streams are recorded for replay.</p>
-                <p>Scope: research and interaction-design prototype. Scores are experimental, individualized estimates—not clinical measures of attention.</p>`,
-            outcome: `<p>Working end-to-end prototype: live HUD, transparent OBS overlay for PS5 recording, and a full EEG processing architecture (acquire → clean → window → calculate → calibrate → aggregate → publish). Next: tighter live alignment of F1 telemetry to sector events, and a post-race view that places Focus/Capacity next to speed, braking, steering, and lap-time loss.</p>`,
+            indexLine: 'An EEG-powered racing system that reveals a driver’s focus in real time.',
+            description: 'An EEG-powered racing system that reveals a driver’s focus in real time and how it shapes performance on track.',
+            overview: `<p>An EEG-powered racing system that reveals a driver’s focus in real time and how it shapes performance on track.</p>`,
+            problem: `<p>Formula 1 captures extensive data on the car, including speed, braking, tires, steering, and lap time, but it cannot show what is happening with the driver. Changes in focus or cognitive load can affect performance before a mistake occurs, yet remain invisible in traditional performance data.</p>`,
+            users: `<p><strong>Driver:</strong> Understand how focus and cognitive load translate to on-track performance, review post-race patterns, and use cognitive training to improve consistency across laps and stints.</p>
+                <p><strong>Pit wall:</strong> Monitor the driver’s cognitive state during a race to inform strategy, anticipate performance changes and lap times, and analyze how mental load affected the race afterward.</p>`,
             url: 'project.html?id=f1-eeg',
-            images: [
+            buildImages: [
                 { url: 'assets/f1-eeg/pipeline.png', title: 'Technical Pipeline', materials: 'Acquire → clean → window → calculate → calibrate → aggregate → publish', layout: 'full' }
+            ],
+            images: []
+        },
+        {
+            id: 'straightup',
+            title: 'StraightUP',
+            year: '2026',
+            medium: 'Design Engineering',
+            caseStudy: true,
+            kicker: 'Ambient interfaces',
+            role: 'Product Manager',
+            focus: 'Ambient interfaces',
+            stack: ['Python', 'MediaPipe', 'OpenCV'],
+            plate: 'bleed',
+            stage: '#f4f1ea',
+            image: 'assets/straightup/poster.jpg',
+            heroVideo: 'assets/straightup/demo.mp4?v=obs',
+            imagePosition: 'center center',
+            indexLine: 'The workstation itself becomes posture feedback.',
+            description: 'StraightUP is a passive posture-correcting interface that turns the workstation itself into feedback.',
+            overview: `<p>StraightUP is a passive posture-correcting interface that turns the workstation itself into feedback. As a person leans toward the screen, the page gradually darkens, making posture visible without interrupting the task.</p>`,
+            problem: `<p>Long periods of poor posture at a screen can contribute to neck and back pain, muscle strain, reduced mobility, and longer-term musculoskeletal issues. Existing tools often rely on wearables, braces, or frequent notifications, which can be restrictive, disruptive, or easy to ignore.</p>`,
+            users: `<ul>
+                <li>Desk workers and students who spend long periods at a computer and need subtle, continuous posture feedback without pausing their work.</li>
+                <li>Physical therapy patients who need support maintaining posture habits between appointments, when clinicians cannot provide real-time guidance.</li>
+                <li>Ergonomics and workplace wellness teams who want a lightweight way to encourage healthier desk habits without requiring employees to wear specialized devices.</li>
+            </ul>`,
+            build: `<p>StraightUP uses a standard webcam and a Python computer-vision pipeline built with MediaPipe Pose and OpenCV. At setup, the user sits upright for several seconds while the system records a personal posture baseline from facial and upper-body landmarks, including head position, shoulder alignment, neck angle, and torso lean.</p>
+                <p>Each incoming camera frame is compared against that baseline to detect forward head movement, hunching, and leaning toward the screen. The raw measurements are smoothed over time to prevent momentary movements from triggering feedback. They are then combined into a single posture-intensity value from 0 to 1.</p>
+                <p>That value controls the interface in real time: mild drift gradually dims the page, sustained poor posture brings forward the FIX POSTURE prompt, and returning to baseline restores the workspace. A live spine visualization mirrors the same landmark data so users can see the feedback loop during testing.</p>`,
+            url: 'project.html?id=straightup',
+            images: []
+        },
+        {
+            id: 'news-dashboard',
+            title: 'Market Intelligence',
+            year: '2026',
+            medium: 'Design Engineering',
+            caseStudy: true,
+            kicker: 'News desk',
+            role: 'PM, Technical Architect',
+            focus: 'Market intelligence',
+            stack: ['React', 'FastAPI', 'Postgres', 'Gemini'],
+            plate: 'bleed',
+            stage: '#e8eef4',
+            image: 'assets/news-dashboard/poster.jpg',
+            heroVideo: 'assets/news-dashboard/demo.mp4',
+            imagePosition: 'center top',
+            indexLine: 'Industry and client news, ranked for a desk.',
+            description: 'A market-intelligence desk that ingests industry and client coverage, ranks what matters, and delivers it in a feed, a company workspace, and a personalized briefing.',
+            overview: `<p>A market-intelligence desk that ingests industry and client coverage, ranks what matters, and delivers it in a feed, a company workspace, and a personalized briefing.</p>`,
+            problem: `<p>Leadership stays current on industry and client news through slow manual research or expensive third-party platforms. Material developments—a filing, a leadership change, a loss ratio move—sit in the same firehose as explainers and thought leadership, so desks either miss what matters or spend hours assembling the same brief.</p>`,
+            users: `<p>Stakeholders tracking industry, clients, and competitors who need a watchlist-driven desk, not a generic news homepage.</p>
+                <p>No manual curation. Ingest runs on a schedule. Personalization comes from followed companies, segments, and lines of business. Claims in briefs have to stay grounded in sources.</p>`,
+            url: 'project.html?id=news-dashboard',
+            buildImages: [
+                { url: 'assets/news-dashboard/mi-pipeline.png', title: 'Intelligence pipeline', materials: 'Ingest → normalize → triage → LLM agents → desk surfaces', layout: 'full' }
+            ],
+            images: [
+                { url: 'assets/news-dashboard/mi-feed.png?v=live', title: 'News', materials: 'Feed · why it matters · impact', layout: 'full' },
+                { url: 'assets/news-dashboard/mi-company.png?v=live', title: 'Company', materials: 'Profile · financials · intelligence brief', layout: 'full' }
             ]
         },
         {
@@ -644,20 +702,27 @@ window.projects = {
             year: '2026',
             medium: 'Design Engineering',
             caseStudy: true,
-            kicker: 'Computer vision',
-            role: 'Product design',
+            kicker: 'Attention-aware interfaces',
+            role: 'Research, Design, Engineering',
+            focus: 'Attention-aware interfaces',
             stack: ['Processing', 'MediaPipe', 'OpenCV', 'Python'],
             plate: 'bleed',
             image: 'assets/attention-mvp/interface.png',
             heroVideo: 'assets/attention-mvp/demo.mp4?v=crop',
-            indexLine: 'A reading interface that shows what didn’t land.',
-            description: 'A document reading interface that surfaces comprehension gaps—missed coverage and stuck spots—via webcam gaze, for study, accessibility, and high-stakes review.',
-            problem: `<p>Finishing a page does not mean the information landed. People skip sections, skim dense passages, or stall without realizing what they missed—whether studying, reading as an older adult, or reviewing contracts and medical instructions. Without a lab eye tracker, there is no lightweight way to see where comprehension may break down.</p>`,
-            users: `<p><strong>Users:</strong> students, older adults, and anyone reviewing high-stakes documents who need feedback on coverage—not another productivity dashboard.</p>
-                <p><strong>Constraints:</strong> consumer webcam accuracy is noisy; the UI must show live gaze without overwhelming the page; reports need rule-based flags (missed rows / long dwell) that non-experts can act on.</p>`,
-            interaction: `<p>Calibrate with seven on-page targets → read with live heatmap + metrics sidebar + camera preview → export a coverage report that flags low-coverage rows and long-dwell cells. The page stays primary; sensing UI is secondary chrome so attention stays on the document.</p>`,
-            system: `<p>Gaze maps onto a 6×10 dwell grid. v1: Processing + OpenCV. v2: MediaPipe Face Landmarker in Python over OSC into the same UI. Confidence gates drop bad samples; blinks are logged alongside dwell. The model shapes the UI as a coverage map—not a raw eye-tracker feed.</p>`,
-            outcome: `<p>Working calibration → heatmap → report loop for comprehension-gap sensing. Next: clearer “what to re-read” callouts, accessibility testing with older readers, and quieter live chrome during reading.</p>`,
+            indexLine: 'A reading interface that shows where attention landed—and where it didn’t.',
+            description: 'FocusMap is a webcam-based reading interface that visualizes a reader’s attention across a document.',
+            overview: `<p>FocusMap is a webcam-based reading interface that visualizes a reader's attention across a document, helping readers identify skipped sections and passages that may need another review.</p>`,
+            problem: `<p>Finishing a page does not necessarily mean it was read carefully. People can skim dense sections, skip lines, or become stuck on a passage without recognizing the pattern afterward. For studying, accessibility, and high-stakes documents such as contracts or medical instructions, readers need a lightweight way to reflect on coverage without specialized eye-tracking hardware.</p>`,
+            users: `<ul>
+                <li>Students who want to identify material they may have skimmed or need to revisit while studying.</li>
+                <li>Older adults and people with cognitive or visual accessibility needs who could benefit from a clearer record of where attention was concentrated or lost.</li>
+                <li>Readers reviewing high-stakes documents who want a final check for sections that received little attention before making a decision or taking action.</li>
+            </ul>`,
+            build: `<p>The reader first calibrates the system by looking at seven targets positioned across the page. This creates a mapping between facial landmark movements from the webcam and locations on the document.</p>
+                <p>During reading, MediaPipe Face Landmarker estimates face orientation and eye-region movement in Python. The gaze estimate is streamed over OSC into a Processing interface, where it is mapped to a 6 × 10 grid over the page. Each grid cell accumulates dwell time, creating a live heatmap of reading coverage.</p>
+                <p>FocusMap defines focus as sustained, directed visual attention rather than claiming to measure comprehension directly. It combines gaze coverage, dwell time, attention movement across the page, and blink rate to identify patterns in how a reader engages with a document. Stable, progressive coverage and a consistent blink pattern suggest sustained engagement; low-coverage areas, unusually long dwell, or changes in blink rate flag passages that may be worth revisiting.</p>
+                <p>Low-confidence samples are discarded to reduce jitter, and blinks are logged separately from gaze. After reading, FocusMap generates a coverage report that highlights rows with minimal attention and cells with unusually long dwell time.</p>
+                <p>FocusMap does not claim to measure comprehension. Instead, it flags observable attention patterns, such as low-coverage rows and unusually long dwell time, for the reader to review.</p>`,
             url: 'project.html?id=attention-mvp',
             images: [
                 { url: 'assets/attention-mvp/interface.png', title: 'Live Tracking UI', materials: 'Heatmap · metrics sidebar · camera preview', layout: 'full' },
@@ -667,7 +732,34 @@ window.projects = {
             ]
         },
         {
+            id: 'ai-speech-rater',
+            title: 'Undertone',
+            year: '2026',
+            medium: 'Design Engineering',
+            caseStudy: true,
+            kicker: 'Ambient interfaces',
+            role: 'Product Manager, AI Engineer',
+            focus: 'Ambient interfaces',
+            stack: ['wav2vec2', 'Python', 'Streamlit'],
+            plate: 'bleed',
+            stage: '#0c0d10',
+            image: 'assets/ai-speech-rater/poster.jpg',
+            heroVideo: 'assets/ai-speech-rater/demo.mp4',
+            imagePosition: 'center center',
+            indexLine: 'A private in-ear cue when the tone of a conversation shifts.',
+            description: 'Undertone is a discreet, in-ear speech interface that identifies emotional shifts in conversation and delivers a private audio cue through a single earbud.',
+            overview: `<p>Undertone is a discreet, in-ear speech interface that identifies emotional shifts in conversation and delivers a private audio cue through a single earbud.</p>`,
+            problem: `<p>Much of a conversation’s meaning is carried through tone, not just words. A phrase like “it’s fine” can communicate reassurance, frustration, or sadness depending on how it is said. For people who find these emotional cues difficult to interpret, that information can be easy to miss in real time. Any support also needs to be relayed discreetly, without interrupting the conversation or changing its natural flow.</p>`,
+            users: `<p>Neurodivergent individuals who want optional, real-time support recognizing emotional shifts in everyday and emotionally complex conversations.</p>`,
+            build: `<p>The system captures room audio through one AirPod and processes it in three-second windows. Each window is passed to a fine-tuned wav2vec2 model, which estimates vocal-affect categories from acoustic qualities of speech such as pitch, rhythm, energy, and vocal quality.</p>
+                <p>Undertone was fine-tuned on the CREMA-D emotional speech dataset using an actor-held-out evaluation split, reaching approximately 72.8% validation accuracy and 0.73 macro F1. A confidence gate discards weak predictions, while a change gate prevents the earbud from repeating the same category continuously.</p>
+                <p>When both conditions are met, local text-to-speech delivers a short cue, such as “This sounds sad,” through the user’s earbud. When the system is uncertain or detects no meaningful shift, it stays silent. Streamlit provided the live prototype environment; the intended product surface is sound through a single earbud.</p>`,
+            url: 'project.html?id=ai-speech-rater',
+            images: []
+        },
+        {
             id: 'switchboard',
+            hidden: true,
             title: 'Switchboard',
             year: '2025',
             medium: 'Design Engineering',
@@ -681,13 +773,10 @@ window.projects = {
             description: 'A planning interface that turns ambiguous goals into comparable routes, paths, and actionable steps—so operators can choose a plan instead of drowning in options.',
             demoUrl: 'https://switchboard-phi.vercel.app/',
             problem: `<p>Ambiguous goals produce too many plausible plans and not enough structure to compare them. People jump between brainstorming, research, and execution without a shared view of routes, tradeoffs, or next steps—so decisions stall or get made on vibe instead of evidence.</p>`,
-            users: `<p><strong>Users:</strong> individuals and small teams planning complex work (projects, learning paths, multi-step ops) who need to explore options without losing the thread.</p>
-                <p><strong>Constraints:</strong> the UI has to hold dense branching information (routes → paths → steps → tools) without feeling like a spreadsheet; comparison must stay scannable; live demo needed to validate the interaction model quickly.</p>`,
-            interaction: `<p>Core loop: prompt a goal → generate a <strong>route</strong> → expand into <strong>paths</strong> and <strong>steps</strong> → inspect tools per step → <strong>compare</strong> alternatives → save into <strong>projects</strong> with detail views.</p>
-                <p>Micro-decisions focused on progressive disclosure: overview first, step detail on demand, compare modal for side-by-side tradeoffs, and a “start here” / planner entry that reduces blank-canvas anxiety. Visual hierarchy keeps the active route readable while secondary paths stay one click away.</p>`,
-            system: `<p>Front-end product surface built in React/Vite with a workflow-centric information architecture. The design problem is not “generate text”—it is structuring AI-assisted planning into objects operators can navigate, compare, and commit to.</p>`,
-            outcome: `<p>Shipped a working product demo with a full journey from home → route → paths/steps → compare → projects. Next: tighten empty states, add explicit tradeoff criteria in compare, and test with users who already juggle multi-path plans.</p>
-                <p><a href="https://switchboard-phi.vercel.app/" target="_blank" rel="noopener">Live demo →</a></p>`,
+            users: `<p>Individuals and small teams planning complex work who need to explore options without losing the thread.</p>
+                <p>The UI has to hold dense branching information (routes → paths → steps → tools) without feeling like a spreadsheet. Comparison must stay scannable.</p>`,
+            build: `<p>Core loop: prompt a goal → generate a <strong>route</strong> → expand into <strong>paths</strong> and <strong>steps</strong> → inspect tools per step → <strong>compare</strong> alternatives → save into <strong>projects</strong>. Progressive disclosure: overview first, step detail on demand, compare modal for tradeoffs.</p>
+                <p>Front-end product surface in React/Vite. The design problem is not “generate text”—it is structuring AI-assisted planning into objects operators can navigate, compare, and commit to.</p>`,
             url: 'project.html?id=switchboard',
             images: [
                 { url: 'assets/switchboard/flow/01-home.png', title: 'Home', materials: 'Entry · goal framing', layout: 'full' },
@@ -706,6 +795,7 @@ window.projects = {
         },
         {
             id: 'heai',
+            hidden: true,
             title: 'HeAI',
             year: '2026',
             medium: 'Design Engineering',
@@ -719,69 +809,16 @@ window.projects = {
             indexLine: 'Home wound check-ins with a clear next action.',
             description: 'Post-op wound triage for patients at home: guided photo check-ins and clear on-track / watch / alert results—not a clinical diagnosis.',
             problem: `<p>After surgery, patients go home without daily clinical review. It is hard to know which wound changes are normal and which are warning signs, and harder still to communicate that clearly between visits. Consumer photo apps are not built for triage; hospital tools are not built for the kitchen table.</p>`,
-            users: `<p><strong>Users:</strong> post-op patients capturing daily check-ins; clinicians receiving a simple triage signal, not raw model scores.</p>
-                <p><strong>Constraints:</strong> trust and false negatives matter more than flashy UI; lighting/alignment vary wildly at home; language must say triage, never diagnosis. Model error has to surface as cautious action, not false certainty.</p>`,
-            interaction: `<p>Onboarding → guided capture with alignment/lighting cues → short symptom survey → triage result (on track / watch closely / alert care) → timeline. The result screen leads with the decision and supporting context; model internals stay secondary. Capture UI does the hard work so the photo is usable before inference runs.</p>`,
-            system: `<p>Two EfficientNet-B1 models on cleaned SurgWound imagery (healing ~73.8%, infection risk ~89.3% on held-out test). Infection cutoff tuned toward catching more elevated-risk cases. Models output scores; the product maps them into three human actions. Scope: surgical imagery research prototype—not for clinical use.</p>`,
-            outcome: `<p>End-to-end patient loop: capture → survey → triage. Next: clearer uncertainty copy when confidence is low, and tighter clinician share-out of the timeline.</p>`,
+            users: `<p>Post-op patients capturing daily check-ins; clinicians receiving a simple triage signal, not raw model scores.</p>
+                <p>Trust and false negatives matter more than flashy UI. Lighting and alignment vary at home. Language must say triage, never diagnosis.</p>`,
+            build: `<p>Onboarding → guided capture with alignment/lighting cues → short symptom survey → triage result (on track / watch closely / alert care) → timeline. The result screen leads with the decision; model internals stay secondary.</p>
+                <p>Two EfficientNet-B1 models on cleaned SurgWound imagery (healing ~73.8%, infection risk ~89.3% on held-out test). Models output scores; the product maps them into three human actions. Research prototype—not for clinical use.</p>`,
             url: 'project.html?id=heai',
             images: [
                 { url: 'assets/heai/heai-results.png', title: 'Triage Result', materials: 'On track / watch / alert', layout: 'half-left' },
                 { url: 'assets/heai/heai-camera.png', title: 'Guided Capture', materials: 'Alignment & lighting cues', layout: 'half-right' },
                 { url: 'assets/heai/pipeline.png', title: 'System Pipeline', materials: 'Photo → model → triage → app', layout: 'full' },
                 { url: 'assets/heai/metrics.png', title: 'Test-Set Performance', materials: 'Accuracy & macro-F1', layout: 'full' }
-            ]
-        },
-        {
-            id: 'straightup',
-            title: 'StraightUP',
-            year: '2026',
-            medium: 'Design Engineering',
-            caseStudy: true,
-            kicker: 'Ambient computing',
-            role: 'Product design',
-            stack: ['Python', 'MediaPipe', 'Tk', 'Raspberry Pi'],
-            plate: 'bleed',
-            image: 'assets/straightup/fix-posture-alert.png',
-            imagePosition: 'center 36%',
-            indexLine: 'Posture feedback through the workstation itself.',
-            description: 'Passive desk posture coaching through the workstation itself—ambient feedback that corrects habit without wearables or interruptive alerts.',
-            problem: `<p>Bad posture at screens leads to pain over time. Wearables often brace or remind in ways that weaken supporting muscles. Notification alerts interrupt focus and get dismissed—so they distract instead of fixing the habit.</p>`,
-            users: `<p><strong>Users:</strong> desk workers who need continuous feedback without leaving their task.</p>
-                <p><strong>Constraints:</strong> feedback must stay peripheral; personal baselines vary; hardware (optional Pi actuators) needs rate limits so motion never feels aggressive.</p>`,
-            interaction: `<p>Calibrate upright baseline → work normally → environment responds (dim / ambient overlay, optional hardware) with intensity smoothed from lean, neck, and shoulder metrics. Escalation is gradual: soft ambient first, stronger overlay only if posture stays off. No toast spam—the screen is the interface.</p>`,
-            system: `<p>Camera → MediaPipe Pose → angle metrics → normalize to personal baseline → smoothed intensity 0–1 → overlay / brightness / optional actuators. Same runtime for laptop demo and Pi deploy.</p>`,
-            outcome: `<p>Working ambient feedback loop that keeps attention on work. Next: quieter early thresholds and clearer calibration affordances for first-time setup.</p>`,
-            url: 'project.html?id=straightup',
-            images: [
-                { url: 'assets/straightup/demo.mp4', title: 'Live Demo', materials: 'Overlay feedback runtime', layout: 'full', type: 'video-file' },
-                { url: 'assets/straightup/fix-posture-alert.png', title: 'Alert State', materials: 'Fullscreen overlay · threshold', layout: 'full' },
-                { url: 'assets/straightup/pipeline.png', title: 'Feedback System', materials: 'Camera → metrics → overlay / actuators', layout: 'full' }
-            ]
-        },
-        {
-            id: 'ai-speech-rater',
-            title: 'AI Speech Rater',
-            year: '2026',
-            medium: 'Design Engineering',
-            caseStudy: true,
-            kicker: 'Speech AI',
-            role: 'Product design',
-            stack: ['Streamlit', 'wav2vec2', 'Python'],
-            plate: 'bleed',
-            image: 'assets/ai-speech-rater/ui.png',
-            indexLine: 'Live coaching from the sound of your voice.',
-            description: 'Live speech-emotion coaching from short mic chunks—confidence-gated cues you can use while speaking, not an offline transcript dump.',
-            problem: `<p>Emotional tone is easy to miss in the moment. Most speech tools do transcription or offline analysis. They do not give continuous, low-latency feedback you can use while speaking or listening.</p>`,
-            users: `<p><strong>Users:</strong> people practicing conversation tone who need awareness cues, not clinical labels.</p>
-                <p><strong>Constraints:</strong> latency and false alarms kill trust; coaching copy must be short and actionable; confidence gating is required so noisy rooms do not spam the user.</p>`,
-            interaction: `<p>3-second listen windows → live emotion + confidence → spoken coaching only when confidence clears a threshold (e.g. soften tone / add warmth). The UI prioritizes the current cue and confidence; history stays secondary so the loop feels like coaching, not analytics.</p>`,
-            system: `<p>Fine-tuned <code>wav2vec2-base</code> on CREMA-D (~72.8% val accuracy / 0.73 macro-F1, actor-held-out split). Streamlit captures 16 kHz mic audio, classifies chunks, and triggers local TTS. Model uncertainty is a first-class product control via the confidence gate.</p>`,
-            outcome: `<p>Live classify → coach loop with a reliability gate. Next: richer cue language per emotion and a calmer idle state between chunks.</p>`,
-            url: 'project.html?id=ai-speech-rater',
-            images: [
-                { url: 'assets/ai-speech-rater/ui.png', title: 'Live Session', materials: 'Streamlit · confidence + coaching', layout: 'full' },
-                { url: 'assets/ai-speech-rater/pipeline.png', title: 'System Pipeline', materials: 'Mic → wav2vec2 → emotion → coaching', layout: 'full' }
             ]
         }
     ]

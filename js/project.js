@@ -45,16 +45,23 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.insertBefore(topbar, document.body.firstChild);
     }
 
-    let galleryHTML = '';
+    const heroSrc = (project.heroVideo || '').split('?')[0];
     let lightboxImages = [];
-    if (project.images && project.images.length > 0) {
-        galleryHTML = `
+
+    const renderGallery = (items) => {
+        if (!items || !items.length) return '';
+        return `
             <div class="project-gallery${project.galleryClass ? ' ' + project.galleryClass : ''}">
-                ${project.images.map((img) => {
+                ${items.map((img) => {
             const url = typeof img === 'string' ? img : img.url;
             const layoutClass = (typeof img !== 'string' && img.layout) ? img.layout : 'full';
             const isVideo = typeof img !== 'string' && img.type === 'video';
             const isLocalVideo = typeof img !== 'string' && img.type === 'video-file';
+            const title = typeof img !== 'string' ? (img.title || '') : '';
+            const materials = typeof img !== 'string' ? (img.materials || '') : '';
+            const caption = (isCaseStudy && (title || materials))
+                ? `<figcaption class="gallery-caption">${title ? `<span>${title}</span>` : ''}${materials ? `<span>${materials}</span>` : ''}</figcaption>`
+                : '';
 
             if (isLocalVideo) {
                 const autoplay = Boolean(img.autoplay);
@@ -63,29 +70,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     : 'controls playsinline preload="metadata"';
                 const poster = img.poster || (autoplay && project.image ? project.image : '');
                 return `
-                        <div class="gallery-item ${layoutClass}${autoplay ? ' is-autoplay-video' : ''}">
+                        <figure class="gallery-item ${layoutClass}${autoplay ? ' is-autoplay-video' : ''}">
                             <video
                                 src="${url}"
                                 ${poster ? `poster="${poster}"` : ''}
                                 ${autoplayAttrs}
                                 ${autoplay ? 'controls' : ''}
-                                title="${img.title || project.title}">
+                                title="${title || project.title}">
                             </video>
-                        </div>
+                            ${caption}
+                        </figure>
                     `;
             }
 
             if (isVideo) {
                 return `
-                        <div class="gallery-item ${layoutClass}">
+                        <figure class="gallery-item ${layoutClass}">
                             <iframe src="${url}"
-                                    title="${img.title || project.title}"
+                                    title="${title || project.title}"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowfullscreen
                                     style="width: 100%; aspect-ratio: 16/9;">
                             </iframe>
-                        </div>
+                            ${caption}
+                        </figure>
                     `;
             }
 
@@ -93,26 +102,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const lightboxIndex = lightboxImages.length - 1;
 
             return `
-                        <div class="gallery-item ${layoutClass}" onclick="openLightbox(${lightboxIndex})">
-                            <img src="${url}" alt="${img.title || project.title}">
-                        </div>
+                        <figure class="gallery-item ${layoutClass}" onclick="openLightbox(${lightboxIndex})">
+                            <img src="${url}" alt="${title || project.title}">
+                            ${caption}
+                        </figure>
                     `;
         }).join('')}
             </div>
         `;
-    }
+    };
+
+    const galleryItems = (project.images || []).filter((img) => {
+        const url = typeof img === 'string' ? img : img.url;
+        return !heroSrc || String(url).split('?')[0] !== heroSrc;
+    });
+    const buildGalleryHTML = renderGallery(project.buildImages || []);
+    const galleryHTML = renderGallery(galleryItems);
 
     const descriptionContent = project.detailedDescription || project.description || '';
     const processDescription = project.process || '';
     const hasProcess = project.process && project.process.trim() !== '';
 
+    const buildHtml = project.build
+        || [project.interaction, project.system].filter((html) => html && String(html).trim()).join('');
     const caseSections = [
         { id: 'problem', label: 'Problem', html: project.problem },
-        { id: 'users', label: 'Users & constraints', html: project.users },
-        { id: 'interaction', label: 'Interaction design', html: project.interaction },
-        { id: 'system', label: 'AI / system', html: project.system },
-        { id: 'outcome', label: 'Outcome', html: project.outcome }
-    ].filter(s => s.html && String(s.html).trim());
+        { id: 'users', label: 'Users', html: project.users },
+        { id: 'build', label: 'How it was built', html: buildHtml }
+    ].filter(s => (s.html && String(s.html).trim()) || (s.id === 'build' && buildGalleryHTML));
 
     let contentHTML = '';
 
@@ -122,16 +139,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="project-full-col">
                     <div class="project-section">
                         <h2 class="section-title">${s.label}</h2>
-                        <div class="section-content case-study-content">${s.html}</div>
+                        ${s.html && String(s.html).trim() ? `<div class="section-content case-study-content">${s.html}</div>` : ''}
+                        ${s.id === 'build' && buildGalleryHTML ? buildGalleryHTML : ''}
                     </div>
                 </div>
             </div>
-        `).join('') + `
+        `).join('') + (galleryHTML ? `
             <div class="project-section" id="section-work">
                 <h2 class="section-title">Work</h2>
                 ${galleryHTML}
             </div>
-        `;
+        ` : '');
     } else {
         contentHTML = `
             <div class="project-content-grid art-layout" id="section-description">
@@ -171,12 +189,15 @@ document.addEventListener('DOMContentLoaded', () => {
         : '';
 
     const specItems = [];
+    const focusLabel = project.focus || project.kicker;
     if (isCaseStudy) {
         if (project.role) specItems.push(['Role', project.role]);
+        if (focusLabel) specItems.push(['Focus', focusLabel]);
         if (project.year) specItems.push(['Year', project.year]);
-        if (project.kicker) specItems.push(['Focus', project.kicker]);
         if (project.stack && project.stack.length) specItems.push(['Tools', project.stack.join(', ')]);
-        if (project.demoUrl) {
+        if (project.liveDemo) {
+            specItems.push(['Demo', `<a class="demo-link" href="#section-overview">Play on this page</a>`]);
+        } else if (project.demoUrl) {
             specItems.push(['Demo', `<a class="demo-link" href="${project.demoUrl}" target="_blank" rel="noopener">Live site</a>`]);
         }
     }
@@ -187,23 +208,43 @@ document.addEventListener('DOMContentLoaded', () => {
         ).join('')}</dl>`
         : '';
 
-    const heroHTML = isCaseStudy && (project.heroVideo || project.image)
+    const liveDemoHTML = project.liveDemo === 'speech-radar'
+        ? `<figure class="product-hero is-live-demo ${project.plate === 'inset' ? 'is-inset' : 'is-bleed'}" style="--stage: ${project.stage || '#0c0d10'};">
+                <div id="speech-radar-demo"></div>
+           </figure>`
+        : '';
+
+    const heroMedia = liveDemoHTML || (isCaseStudy && (project.heroVideo || project.image)
         ? `<figure class="product-hero ${project.plate === 'inset' ? 'is-inset' : 'is-bleed'}${project.heroVideo ? ' has-video' : ''}" style="--stage: ${project.stage || '#111'}; --pos: ${project.imagePosition || 'center center'};">
                 ${project.heroVideo
                     ? `<video src="${project.heroVideo}" poster="${project.image || ''}" muted loop playsinline preload="metadata" data-autoplay disablepictureinpicture aria-label="${project.title}"></video>`
                     : `<img src="${project.image}" alt="${project.title}">`}
            </figure>`
-        : '';
+        : '');
+
+    const overviewHtml = project.overview
+        || (project.description ? `<p>${project.description}</p>` : '');
+    const heroHTML = isCaseStudy && (overviewHtml || heroMedia)
+        ? `<div id="section-overview">
+                <div class="project-content-grid art-layout">
+                    <div class="project-full-col">
+                        <div class="project-section">
+                            <h2 class="section-title">Overview</h2>
+                            ${overviewHtml ? `<div class="section-content case-study-content">${overviewHtml}</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+                ${heroMedia}
+           </div>`
+        : heroMedia;
 
     contentContainer.innerHTML = `
         <div class="project-header">
-            ${isCaseStudy && project.kicker ? `<p class="product-kicker">${project.kicker}</p>` : ''}
             <h1 class="project-title-large">${project.title}</h1>
             ${isCaseStudy ? specHTML : `<div class="project-meta-large">
                 <span>${mediumDetails}</span>
                 <span>${project.year}</span>
             </div>`}
-            ${isCaseStudy && project.description ? `<p class="case-study-lede">${project.description}</p>` : ''}
             ${!isCaseStudy && chipsHTML ? chipsHTML : ''}
         </div>
 
@@ -244,8 +285,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isCaseStudy && caseSections.length) {
             pageNav.innerHTML = `
                 <span class="page-nav-label">On This Page</span>
+                ${heroHTML ? `<a class="page-nav-link" onclick="scrollToSection('overview')">Overview</a>` : ''}
                 ${caseSections.map(s => `<a class="page-nav-link" onclick="scrollToSection('${s.id}')">${s.label}</a>`).join('')}
-                <a class="page-nav-link" onclick="scrollToSection('work')">Work</a>
+                ${galleryHTML ? `<a class="page-nav-link" onclick="scrollToSection('work')">Work</a>` : ''}
             `;
         } else if (!hasProcess) {
             const processLink = pageNav.querySelector('a.page-nav-link[onclick*="process"]');
@@ -257,14 +299,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const subnav = document.createElement('nav');
         subnav.className = 'product-subnav';
         subnav.setAttribute('aria-label', 'On this page');
-        subnav.innerHTML = caseSections.map(s =>
+        const overviewLink = heroHTML
+            ? `<a class="product-subnav-link" onclick="scrollToSection('overview')">Overview</a>`
+            : '';
+        subnav.innerHTML = overviewLink + caseSections.map(s =>
             `<a class="product-subnav-link" onclick="scrollToSection('${s.id}')">${s.label}</a>`
-        ).join('') + `<a class="product-subnav-link" onclick="scrollToSection('work')">Work</a>`;
+        ).join('') + (galleryHTML
+            ? `<a class="product-subnav-link" onclick="scrollToSection('work')">Work</a>`
+            : '');
         const topbar = document.querySelector('.product-topbar');
         if (topbar) topbar.after(subnav);
     }
 
     bindAutoplayVideos(contentContainer);
+
+    if (project.liveDemo === 'speech-radar') {
+        const script = document.createElement('script');
+        script.src = 'js/speech-radar-demo.js?v=speech-radar';
+        document.body.appendChild(script);
+    }
 
     if (project.id === 'prediction-machine') {
         const loadScript = (src) => {

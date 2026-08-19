@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('product-work-root');
     if (!root) return;
 
-    const projects = (window.projects && window.projects.designEngineering) || [];
+    const projects = ((window.projects && window.projects.designEngineering) || [])
+        .filter((project) => !project.hidden);
     if (!projects.length) {
         root.innerHTML = '<p>No case studies yet.</p>';
         return;
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const position = project.imagePosition || 'center center';
         const line = project.indexLine || project.description || '';
         const demo = project.demoUrl
-            ? `<a class="product-tile-demo" href="${project.demoUrl}" target="_blank" rel="noopener">Live demo →</a>`
+            ? `<a class="product-tile-demo" href="${project.demoUrl}"${/^https?:/i.test(project.demoUrl) ? ' target="_blank" rel="noopener"' : ''}>Live demo →</a>`
             : '';
 
         return `
