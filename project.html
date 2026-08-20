@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=users1">
+    <link rel="stylesheet" href="css/style.css?v=mobile3">
     <script>
         (function () {
             var id = new URLSearchParams(window.location.search).get('id');
@@ -351,23 +351,73 @@
         @media (max-width: 1100px) {
             .lightbox {
                 grid-template-columns: 1fr;
+                grid-template-rows: minmax(0, 1fr) auto;
+                overflow: auto;
+            }
+
+            .lightbox-main {
+                padding: 52px 12px 12px;
+                min-height: 50vh;
+            }
+
+            .lightbox-image {
+                max-height: 62vh;
+                box-shadow: none;
             }
 
             .lightbox-sidebar {
-                position: absolute;
-                bottom: 0;
-                left: 0;
+                position: static;
+                transform: none;
                 width: 100%;
-                background: rgba(255, 255, 255, 0.95);
+                background: #fff;
                 border-left: none;
                 border-top: 1px solid #eee;
-                padding: 20px;
-                transform: translateY(100%);
-                transition: transform 0.3s ease;
+                padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
             }
 
-            .lightbox-sidebar.show-info {
-                transform: translateY(0);
+            .lightbox-title {
+                font-size: 1.35rem;
+            }
+
+            .close-lightbox {
+                top: 8px;
+                right: 10px;
+            }
+
+            .nav-arrow {
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-item.full,
+            .gallery-item.half-left,
+            .gallery-item.half-right,
+            .gallery-item.inset-left,
+            .gallery-item.inset-right {
+                width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .project-gallery {
+                gap: 28px 0;
+            }
+
+            .project-title-large {
+                font-size: 2rem;
+            }
+
+            .project-meta-large {
+                flex-wrap: wrap;
+                gap: 8px 16px;
+                margin-bottom: 28px;
+            }
+
+            #game-container {
+                min-height: 0 !important;
+                margin: 1rem 0 !important;
             }
         }
     </style>
@@ -410,7 +460,7 @@
     </div>
 
     <script src="js/data.js?v=mi3"></script>
-    <script src="js/project.js?v=spec2"></script>
+    <script src="js/project.js?v=mobile2"></script>
 </body>
 
 </html>

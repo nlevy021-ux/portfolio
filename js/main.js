@@ -168,4 +168,50 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lower === 'design engineering') return 'dot-design-engineering';
         return 'dot-all';
     }
+
+    bindMobileNav();
 });
+
+function bindMobileNav() {
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar || document.body.classList.contains('product-mode')) return;
+    if (sidebar.querySelector('.nav-toggle')) return;
+
+    const header = sidebar.querySelector('.sidebar-header') || sidebar;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'nav-toggle';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-controls', 'site-nav');
+    btn.textContent = 'Menu';
+    header.appendChild(btn);
+
+    const nav = sidebar.querySelector('.filter-nav');
+    if (nav && !nav.id) nav.id = 'site-nav';
+
+    const closeMenu = () => {
+        sidebar.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.textContent = 'Menu';
+    };
+
+    btn.addEventListener('click', () => {
+        const open = sidebar.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', String(open));
+        btn.textContent = open ? 'Close' : 'Menu';
+    });
+
+    const mq = window.matchMedia('(max-width: 768px)');
+    const syncToggle = () => {
+        btn.hidden = !mq.matches;
+        if (!mq.matches) closeMenu();
+    };
+    syncToggle();
+    mq.addEventListener('change', syncToggle);
+
+    sidebar.querySelectorAll('.filter-btn').forEach((filterBtn) => {
+        filterBtn.addEventListener('click', () => {
+            if (window.matchMedia('(max-width: 768px)').matches) closeMenu();
+        });
+    });
+}
