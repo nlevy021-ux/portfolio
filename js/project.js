@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const topbar = document.createElement('header');
         topbar.className = 'product-topbar';
         topbar.innerHTML = `
-            <a href="product.html" class="logo">NOAH LEVY</a>
+            <a href="index.html" class="logo">NOAH LEVY</a>
             <nav class="product-topbar-nav" aria-label="Product">
                 <a href="product.html">Work</a>
                 <a href="index.html">About</a>
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="lightbox-counter" class="lightbox-counter"></div>
                 <div id="lightbox-caption" class="lightbox-caption"></div>
                 <div style="margin-top: auto;">
-                    <a href="#" class="logo" style="margin-bottom: 0;">NOAH LEVY</a>
+                    <a href="index.html" class="logo" style="margin-bottom: 0;">NOAH LEVY</a>
                 </div>
             </div>
         </div>

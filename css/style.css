@@ -1033,6 +1033,34 @@ body.landing-page {
     transform: translateY(-2px);
 }
 
+.landing-contact {
+    display: inline-block;
+    margin-top: 40px;
+    font-size: 0.85rem;
+    color: #666;
+    position: relative;
+    width: fit-content;
+}
+
+.landing-contact:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #111;
+    transition: width 0.3s ease;
+}
+
+.landing-contact:hover {
+    color: #111;
+}
+
+.landing-contact:hover:after {
+    width: 100%;
+}
+
 /* Product chrome */
 html.product-pending {
     background: #f5f4f1;
@@ -1640,7 +1668,8 @@ body.product-mode .project-section {
     .product-hero video,
     .landing-path,
     .landing-path-name:after,
-    .landing-path-desc {
+    .landing-path-desc,
+    .landing-contact:after {
         animation: none;
         transition: none;
     }
