@@ -906,7 +906,13 @@ a {
     .project-card:hover .card-image-wrapper,
     .project-card:hover .card-image-wrapper img,
     .gallery-item:hover img,
-    .gallery-item img:hover {
+    .gallery-item img:hover,
+    .landing-path:hover,
+    .landing-path:hover .landing-path-desc,
+    .product-tile:hover .product-tile-frame,
+    .product-tile:hover .product-tile-frame img,
+    .product-tile:hover .product-tile-frame video,
+    .product-tile:hover .product-tile-caption {
         transform: none;
     }
 }
@@ -977,6 +983,7 @@ body.landing-page {
     flex-direction: column;
     gap: 8px;
     padding: 28px 36px 8px 0;
+    transition: transform 0.35s ease;
 }
 
 .landing-path:last-child {
@@ -989,6 +996,20 @@ body.landing-page {
     font-size: 0.95rem;
     font-weight: 600;
     color: #111;
+    position: relative;
+    display: inline-block;
+    width: fit-content;
+}
+
+.landing-path-name:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #000;
+    transition: width 0.3s ease;
 }
 
 .landing-path-desc {
@@ -996,11 +1017,20 @@ body.landing-page {
     color: #666;
     line-height: 1.5;
     max-width: 18em;
+    transition: transform 0.4s ease, color 0.3s ease;
 }
 
-.landing-path:hover .landing-path-name {
-    text-decoration: underline;
-    text-underline-offset: 4px;
+.landing-path:hover {
+    transform: translateY(-2px);
+}
+
+.landing-path:hover .landing-path-name:after {
+    width: 100%;
+}
+
+.landing-path:hover .landing-path-desc {
+    color: #333;
+    transform: translateY(-2px);
 }
 
 /* Product chrome */
@@ -1201,6 +1231,7 @@ body.product-mode ::selection {
     overflow: hidden;
     background: var(--stage, #111);
     aspect-ratio: 16 / 8.2;
+    transition: transform 0.35s ease;
 }
 
 .product-tile-frame:after {
@@ -1233,7 +1264,7 @@ body.product-mode ::selection {
     object-position: var(--pos, center center);
     display: block;
     opacity: 0;
-    transition: opacity 0.8s ease, filter 0.55s ease;
+    transition: opacity 0.8s ease, filter 0.55s ease, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .product-tile-frame video {
@@ -1252,6 +1283,10 @@ body.product-mode ::selection {
     box-sizing: border-box;
 }
 
+.product-tile:hover .product-tile-frame {
+    transform: translateY(-2px);
+}
+
 .product-tile:hover .product-tile-frame:before {
     opacity: 0.08;
 }
@@ -1259,12 +1294,15 @@ body.product-mode ::selection {
 .product-tile:hover .product-tile-frame img,
 .product-tile:hover .product-tile-frame video {
     filter: saturate(1.05);
+    transform: scale(1.03);
 }
 
-.product-tile:hover .product-tile-title {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-thickness: 1px;
+.product-tile:hover .product-tile-caption {
+    transform: translateY(-4px);
+}
+
+.product-tile:hover .product-tile-title:after {
+    width: 100%;
 }
 
 .product-tile-caption {
@@ -1272,6 +1310,8 @@ body.product-mode ::selection {
     flex-direction: column;
     gap: 6px;
     padding-top: 16px;
+    transform: translateY(0);
+    transition: transform 0.4s ease;
 }
 
 .product-tile-row {
@@ -1287,6 +1327,19 @@ body.product-mode ::selection {
     font-weight: 500;
     letter-spacing: -0.02em;
     color: #171717;
+    position: relative;
+    display: inline-block;
+}
+
+.product-tile-title:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #171717;
+    transition: width 0.3s ease;
 }
 
 .product-tile-meta {
@@ -1578,10 +1631,16 @@ body.product-mode .project-section {
 
 @media (prefers-reduced-motion: reduce) {
     .product-tile,
+    .product-tile-frame,
     .product-tile-frame img,
     .product-tile-frame video,
     .product-tile-frame:before,
-    .product-hero video {
+    .product-tile-caption,
+    .product-tile-title:after,
+    .product-hero video,
+    .landing-path,
+    .landing-path-name:after,
+    .landing-path-desc {
         animation: none;
         transition: none;
     }
