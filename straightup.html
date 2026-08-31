@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StraightUP</title>
+    <meta name="description" content="Live desk-posture demo. Your webcam stays on this device. Sit upright, then lean in — the page itself becomes the feedback.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/straightup.css">
+</head>
+
+<body>
+    <main class="stage">
+        <article class="page">
+            <p class="kicker">Workstation notes</p>
+            <h1>Keep the task in front. Let the room do the reminding.</h1>
+            <p>Most posture tools compete with the work. They buzz, badge, and wait to be dismissed. The habit stays because the signal lives somewhere else, on a wrist, in a notification shade, off to the side of attention.</p>
+            <p>The better loop is quieter. Sit as you would. Write. When you drift toward the screen, or lean left or right, the display itself darkens. Stay there long enough and the environment insists. Sit back, and the page returns.</p>
+            <p>No dashboard. No score. Calibration in the first seconds, then the workstation becomes the interface.<span class="caret"></span></p>
+        </article>
+
+        <aside class="spine-card" aria-label="Live spine">
+            <header>
+                <strong>Spine</strong>
+                <span id="spine-source">waiting</span>
+            </header>
+            <canvas id="spine" width="720" height="900"></canvas>
+            <p class="spine-status">
+                <span><span class="live-dot" id="live-dot"></span><span class="spine-status-copy" id="spine-copy">Sit upright to calibrate…</span></span>
+                <button type="button" id="recalibrate">Recalibrate</button>
+            </p>
+        </aside>
+    </main>
+
+    <div id="dim"></div>
+    <p id="alert">FIX POSTURE</p>
+    <video id="camera" playsinline muted autoplay></video>
+
+    <div class="gate" id="gate" role="dialog" aria-labelledby="gate-title" aria-describedby="gate-copy">
+        <div class="gate-card">
+            <p class="kicker">StraightUP</p>
+            <h1 id="gate-title">Sit at your desk. Let the page respond.</h1>
+            <p id="gate-copy">This is a live demo. After you allow the camera, sit upright for a couple of seconds so it can learn your posture. Then lean toward the screen, or shift side to side. The page will dim. Sit back, and it returns.</p>
+            <p>It is a desk-posture cue, not a clinical assessment. Best on a laptop, in Chrome or Safari.</p>
+            <button type="button" id="start">Allow camera &amp; start</button>
+            <p class="gate-note">Your camera stays on this device. Nothing is recorded or uploaded.</p>
+            <p id="status"></p>
+        </div>
+    </div>
+
+    <script type="module" src="js/straightup-demo.js?v=su11"></script>
+</body>
+
+</html>

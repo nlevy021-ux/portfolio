@@ -189,12 +189,16 @@ document.addEventListener('DOMContentLoaded', () => {
         : '';
 
     const focusLabel = project.focus || project.kicker;
+    const demoSpec = project.demoUrl
+        ? `<div><dt>Demo</dt><dd><a class="demo-link" href="${project.demoUrl}">Try it live</a></dd></div>`
+        : '';
     const specHTML = isCaseStudy
-        ? `<dl class="product-spec">
+        ? `<dl class="product-spec${project.demoUrl ? ' has-demo' : ''}">
             <div><dt>Role</dt><dd>${project.role || '—'}</dd></div>
             <div><dt>Focus</dt><dd>${focusLabel || '—'}</dd></div>
             <div><dt>Year</dt><dd>${project.year || '—'}</dd></div>
             <div><dt>Tools</dt><dd>${project.stack && project.stack.length ? project.stack.join(', ') : '—'}</dd></div>
+            ${demoSpec}
            </dl>`
         : '';
 
@@ -302,11 +306,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const overviewLink = heroHTML
             ? `<a class="product-subnav-link" onclick="scrollToSection('overview')">Overview</a>`
             : '';
+        const demoNav = project.demoUrl
+            ? `<a class="product-subnav-link" href="${project.demoUrl}">Demo</a>`
+            : '';
         subnav.innerHTML = overviewLink + caseSections.map(s =>
             `<a class="product-subnav-link" onclick="scrollToSection('${s.id}')">${s.label}</a>`
         ).join('') + (galleryHTML
             ? `<a class="product-subnav-link" onclick="scrollToSection('work')">Work</a>`
-            : '');
+            : '') + demoNav;
         const topbar = document.querySelector('.product-topbar');
         if (topbar) topbar.after(subnav);
     }

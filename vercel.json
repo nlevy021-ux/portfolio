@@ -12,6 +12,7 @@
     { "source": "/photography", "destination": "/photography.html" },
     { "source": "/printmaking", "destination": "/printmaking.html" },
     { "source": "/technology", "destination": "/technology.html" },
-    { "source": "/project", "destination": "/project.html" }
+    { "source": "/project", "destination": "/project.html" },
+    { "source": "/straightup", "destination": "/straightup.html" }
   ]
 }

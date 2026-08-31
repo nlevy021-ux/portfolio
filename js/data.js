@@ -653,6 +653,7 @@ window.projects = {
             imagePosition: 'center center',
             indexLine: 'A workstation that delivers subtle, ambient feedback when desk posture begins to slip.',
             description: 'StraightUP is a passive posture-correcting interface that turns the workstation itself into feedback.',
+            demoUrl: 'straightup.html',
             overview: `<p>StraightUP is a passive posture-correcting interface that turns the workstation itself into feedback. As a person leans toward the screen, the page gradually darkens, making posture visible without interrupting the task.</p>`,
             problem: `<p>Long periods of poor posture at a screen can contribute to neck and back pain, muscle strain, reduced mobility, and longer-term musculoskeletal issues. Existing tools often rely on wearables, braces, or frequent notifications, which can be restrictive, disruptive, or easy to ignore.</p>`,
             users: `<p><strong>Desk workers and students:</strong> Need subtle, continuous posture feedback during long computer sessions, without pausing their work.</p>
