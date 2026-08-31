@@ -265,6 +265,47 @@ p {
 
 #status:empty { display: none; }
 
+.mode-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 8px 0 18px;
+}
+
+.mode-pick {
+    appearance: none;
+    border: 1px solid #1a1a1a;
+    background: transparent;
+    color: #1a1a1a;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 13px 18px;
+    cursor: pointer;
+}
+
+.mode-pick.is-on,
+.mode-pick:hover,
+.mode-pick:focus-visible {
+    background: #1a1a1a;
+    color: #f4f1ea;
+}
+
+#mode-detail[hidden] { display: none; }
+
+.page-phone[hidden],
+.page-computer[hidden] { display: none; }
+
+body.is-phone #alert {
+    left: 16px;
+    right: 16px;
+    width: auto;
+    white-space: normal;
+    font-size: clamp(28px, 9vw, 48px);
+}
+
 @media (max-width: 900px) {
     body { overflow: auto; }
 

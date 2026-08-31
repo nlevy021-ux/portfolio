@@ -19,7 +19,8 @@ const LM = {
     RIGHT_HIP: 24
 };
 
-const CONFIG = {
+const COMPUTER = {
+    mix: ['face', 'neck', 'lean'],
     visibility: 0.45,
     emaAlpha: 0.28,
     holdSeconds: 0.5,
@@ -42,6 +43,49 @@ const CONFIG = {
         alertThreshold: 0.78,
         flashInterval: 0.55,
         flashOpacity: 1
+    },
+    copy: {
+        alert: 'FIX POSTURE',
+        calibrate: 'Sit upright to calibrate…',
+        looking: 'Sit so your head and shoulders are in view',
+        cue: 'Alert · sit back up',
+        gate: 'Sit upright for a couple of seconds so it can learn your desk posture. Then lean toward the screen, or shift side to side. The page will dim. Sit back, and it returns.',
+        aside: 'A desk-posture cue, not a clinical assessment. Best in Chrome or Safari.'
+    }
+};
+
+const PHONE = {
+    mix: ['face', 'neck'],
+    visibility: 0.4,
+    emaAlpha: 0.3,
+    holdSeconds: 0.45,
+    decaySeconds: 1.2,
+    deadbandDeg: 0.45,
+    scale: { lean: 22, neck: 16, tilt: 15 },
+    posture: { activation: 0.04, fullScale: 0.26, smoothing: 0.3 },
+    face: {
+        visibility: 0.4,
+        baselineSamples: 14,
+        baselineMs: 1400,
+        minSamples: 4,
+        baselineAlpha: 0.28,
+        lockBaseline: true,
+        activation: 1.02,
+        fullScale: 1.1
+    },
+    overlay: {
+        maxOpacity: 0.9,
+        alertThreshold: 0.7,
+        flashInterval: 0.55,
+        flashOpacity: 1
+    },
+    copy: {
+        alert: 'LIFT THE PHONE',
+        calibrate: 'Hold at eye height to calibrate…',
+        looking: 'Keep your face in view',
+        cue: 'Alert · lift the phone',
+        gate: 'Hold the phone at eye height for a couple of seconds. Then lower it toward your lap, or bring it closer. The page will dim — that is the neck and eye-strain cue. Lift it back up, and the page returns.',
+        aside: 'A neck and eye-strain cue for handheld use, not a clinical assessment.'
     }
 };
 
@@ -308,16 +352,20 @@ class CombinedMapper {
             }
             face = this.faceMapper.map(ratio);
         }
+        const mix = this.config.mix || ['face', 'neck', 'lean'];
         const centeredNeck = (metrics.neck || 0) - this.neckBase;
         const centeredLean = (metrics.lean || 0) - this.leanBase;
-        const neck = this.neck.map(centeredNeck);
-        const lean = this.lean.map(centeredLean);
-        const level = Math.max(face, neck, lean);
+        const neck = mix.includes('neck') ? this.neck.map(centeredNeck) : 0;
+        const lean = mix.includes('lean') ? this.lean.map(centeredLean) : 0;
+        const scored = [];
+        if (mix.includes('face')) scored.push(['face', face]);
+        if (mix.includes('neck')) scored.push(['neck', neck]);
+        if (mix.includes('lean')) scored.push(['lean', lean]);
+        const level = scored.reduce((max, [, value]) => Math.max(max, value), 0);
         let source = 'none';
         if (level > 1e-6) {
-            if (face >= neck && face >= lean) source = 'face';
-            else if (neck >= lean) source = 'neck';
-            else source = 'lean';
+            scored.sort((a, b) => b[1] - a[1]);
+            source = scored[0][0];
         }
         this.last = {
             face,
@@ -563,13 +611,19 @@ const copyEl = document.getElementById('spine-copy');
 const liveDot = document.getElementById('live-dot');
 const canvas = document.getElementById('spine');
 const recalibrateBtn = document.getElementById('recalibrate');
+const gateCopy = document.getElementById('gate-copy');
+const gateAside = document.getElementById('gate-aside');
+const modeDetail = document.getElementById('mode-detail');
+const pageComputer = document.querySelector('.page-computer');
+const pagePhone = document.querySelector('.page-phone');
 
-const smoother = new EmaSmoother(CONFIG.emaAlpha, CONFIG.holdSeconds, CONFIG.decaySeconds);
-const mapper = new CombinedMapper(CONFIG);
-const alertState = new AlertState(
-    CONFIG.overlay.alertThreshold,
-    CONFIG.overlay.flashInterval,
-    CONFIG.overlay.flashOpacity
+let config = COMPUTER;
+let smoother = new EmaSmoother(config.emaAlpha, config.holdSeconds, config.decaySeconds);
+let mapper = new CombinedMapper(config);
+let alertState = new AlertState(
+    config.overlay.alertThreshold,
+    config.overlay.flashInterval,
+    config.overlay.flashOpacity
 );
 
 let poseLandmarker = null;
@@ -579,6 +633,28 @@ let loopTimer = null;
 
 function setStatus(text) {
     statusEl.textContent = text || '';
+}
+
+function applyMode(mode) {
+    config = mode === 'phone' ? PHONE : COMPUTER;
+    document.body.classList.toggle('is-phone', mode === 'phone');
+    if (pageComputer) pageComputer.hidden = mode === 'phone';
+    if (pagePhone) pagePhone.hidden = mode !== 'phone';
+    alertEl.textContent = config.copy.alert;
+    if (gateCopy) gateCopy.textContent = config.copy.gate;
+    if (gateAside) gateAside.textContent = config.copy.aside;
+    document.querySelectorAll('.mode-pick').forEach((btn) => {
+        btn.classList.toggle('is-on', btn.dataset.mode === mode);
+    });
+    if (modeDetail) modeDetail.hidden = false;
+    smoother = new EmaSmoother(config.emaAlpha, config.holdSeconds, config.decaySeconds);
+    mapper = new CombinedMapper(config);
+    alertState = new AlertState(
+        config.overlay.alertThreshold,
+        config.overlay.flashInterval,
+        config.overlay.flashOpacity
+    );
+    copyEl.textContent = config.copy.calibrate;
 }
 
 function applyState({ calibrating, dim, alert, source, copy, points, metrics, level }) {
@@ -593,12 +669,12 @@ function applyState({ calibrating, dim, alert, source, copy, points, metrics, le
 
 function processLandmarks(rawLandmarks, now) {
     const landmarks = flipLandmarks(rawLandmarks);
-    const raw = computeMetrics(landmarks, CONFIG.visibility);
+    const raw = computeMetrics(landmarks, config.visibility);
     const filtered = smoother.update(raw, now);
     const metrics = {
-        lean: normalizeOne(filtered.leanDeg, CONFIG.scale.lean, CONFIG.deadbandDeg),
-        neck: normalizeOne(filtered.neckDeg, CONFIG.scale.neck, CONFIG.deadbandDeg),
-        tilt: normalizeOne(filtered.tiltDeg, CONFIG.scale.tilt, CONFIG.deadbandDeg)
+        lean: normalizeOne(filtered.leanDeg, config.scale.lean, config.deadbandDeg),
+        neck: normalizeOne(filtered.neckDeg, config.scale.neck, config.deadbandDeg),
+        tilt: normalizeOne(filtered.tiltDeg, config.scale.tilt, config.deadbandDeg)
     };
 
     if (!landmarks) {
@@ -607,9 +683,7 @@ function processLandmarks(rawLandmarks, now) {
             dim: 0,
             alert: false,
             source: mapper.calibrating ? 'calibrating' : 'none',
-            copy: mapper.calibrating
-                ? 'Sit so your head and shoulders are in view'
-                : 'Looking for pose',
+            copy: mapper.calibrating ? config.copy.looking : 'Looking for pose',
             points: {},
             metrics: mapper.last,
             level: 0
@@ -618,7 +692,7 @@ function processLandmarks(rawLandmarks, now) {
     }
 
     const level = mapper.map(landmarks, metrics);
-    const overlay = alertState.evaluate(level, CONFIG.overlay.maxOpacity, now);
+    const overlay = alertState.evaluate(level, config.overlay.maxOpacity, now);
     const calibrating = mapper.calibrating;
     const points = extractSpinePoints(landmarks, { ...metrics, ...mapper.last }, 0.35);
     applyState({
@@ -627,12 +701,10 @@ function processLandmarks(rawLandmarks, now) {
         alert: overlay.alert && !calibrating,
         source: mapper.last.source,
         copy: calibrating
-            ? 'Sit upright to calibrate…'
+            ? config.copy.calibrate
             : overlay.alert
-                ? 'Alert · sit back up'
-                : landmarks
-                    ? 'Tracking'
-                    : 'Sit so your head and shoulders are in view',
+                ? config.copy.cue
+                : 'Tracking',
         points,
         metrics: mapper.last,
         level
@@ -686,7 +758,7 @@ async function start() {
     setStatus('Requesting camera…');
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        setStatus('This browser cannot access the camera. Open this page in Chrome or Safari on a laptop.');
+        setStatus('This browser cannot access the camera. Try Chrome or Safari.');
         startBtn.disabled = false;
         return;
     }
@@ -733,23 +805,30 @@ async function start() {
     startLoop();
 }
 
+document.querySelectorAll('.mode-pick').forEach((btn) => {
+    btn.addEventListener('click', () => applyMode(btn.dataset.mode));
+});
 startBtn.addEventListener('click', start);
 recalibrateBtn.addEventListener('click', () => {
     resetPipeline();
-    copyEl.textContent = 'Sit upright to calibrate…';
+    copyEl.textContent = config.copy.calibrate;
     sourceEl.textContent = 'calibrating';
     liveDot.classList.remove('is-ready');
     dimEl.style.opacity = 0;
     alertEl.style.opacity = 0;
 });
 
+const likelyPhone = window.matchMedia('(max-width: 900px)').matches;
+applyMode(likelyPhone ? 'phone' : 'computer');
+
 applyState({
     calibrating: true,
     dim: 0,
     alert: false,
     source: 'waiting',
-    copy: 'Sit upright to calibrate…',
+    copy: config.copy.calibrate,
     points: {},
     metrics: {},
     level: 0
 });
+
