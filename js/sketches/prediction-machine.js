@@ -1,8 +1,95 @@
+(function () {
+    const overlay = document.getElementById('pm-overlay');
+    const startBtn = document.getElementById('pm-start');
+    const statusEl = document.getElementById('pm-status');
+    const copyEl = document.getElementById('pm-copy');
+    if (!overlay || !startBtn) return;
+
+    const startCopy = copyEl ? copyEl.textContent : '';
+
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            const existing = document.querySelector(`script[src="${src}"]`);
+            if (existing) {
+                resolve();
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = () => reject(new Error('Could not load ' + src));
+            document.head.appendChild(script);
+        });
+    }
+
+    function setStatus(text) {
+        if (!statusEl) return;
+        statusEl.hidden = !text;
+        statusEl.textContent = text || '';
+    }
+
+    function showError(message) {
+        overlay.classList.remove('is-off', 'is-loading');
+        overlay.setAttribute('aria-hidden', 'false');
+        startBtn.hidden = false;
+        startBtn.disabled = false;
+        if (copyEl) {
+            copyEl.hidden = false;
+            copyEl.textContent = message;
+        }
+        setStatus('');
+    }
+
+    window.__pmDemo = {
+        hideOverlay: function () {
+            overlay.classList.add('is-off');
+            overlay.setAttribute('aria-hidden', 'true');
+        },
+        showError: showError
+    };
+
+    startBtn.addEventListener('click', async function () {
+        startBtn.disabled = true;
+        overlay.classList.add('is-loading');
+        if (copyEl) {
+            copyEl.hidden = false;
+            copyEl.textContent = startCopy;
+        }
+        setStatus('Requesting camera…');
+
+        try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                throw new Error('This browser cannot access the camera.');
+            }
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: { facingMode: 'user' }
+            });
+            stream.getTracks().forEach(function (track) { track.stop(); });
+
+            setStatus('Loading the piece…');
+            await loadScript('https://cdn.jsdelivr.net/npm/ml5@1.2.1/dist/ml5.min.js');
+            await loadScript('https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js');
+            if (typeof p5 === 'function' && !document.querySelector('#game-container canvas')) {
+                new p5();
+            }
+        } catch (err) {
+            console.error(err);
+            const name = err && err.name;
+            let message = err && err.message ? err.message : 'Could not start the demo.';
+            if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
+                message = 'Camera permission was blocked. Allow the camera for this site, then start again.';
+            } else if (name === 'NotFoundError') {
+                message = 'No camera was found on this device.';
+            }
+            showError(message);
+        }
+    });
+})();
+
 let video;
-let faceApi;
 let detections = [];
 
-// Game Variables
 let maxBreaths = 25;
 let previousNoseX = -1;
 let movementThreshold = 10;
@@ -15,12 +102,10 @@ let breathCount = 0;
 let attempts = 0;
 let initialErrorRate = 0.35;
 
-// Optical flow / Breath variables
 let prevChestY = null;
 let prevVerticalDisplacement = 0;
 let breathThreshold = 1.5;
 
-// Movement States
 const MOVEMENT_STATE = {
     LEFT: 'LEFT',
     RIGHT: 'RIGHT',
@@ -32,43 +117,52 @@ let displayedMovement = MOVEMENT_STATE.NO_MOVEMENT;
 
 let shapes = [];
 
-// p5.js Setup
 function setup() {
-    // Create canvas inside the specific container
-    // We will assume 'project-content' or a specific ID checks project.js
-    let canvas = createCanvas(640, 480);
-    canvas.parent('game-container'); // We need to ensure this element exists
+    const canvas = createCanvas(640, 480);
+    canvas.parent('game-container');
+    if (canvas.elt) {
+        canvas.elt.style.visibility = 'visible';
+        canvas.elt.removeAttribute('data-hidden');
+    }
 
-    video = createCapture(VIDEO);
+    video = createCapture({ video: { facingMode: 'user' }, audio: false }, startFaceTracker);
     video.size(width, height);
-    video.hide(); // Hide the HTML video element, we draw it on canvas
-
-    const faceOptions = {
-        withLandmarks: false,
-        withDescriptors: false,
-        minConfidence: 0.5
-    };
-
-    // Initialize the model
-    faceApi = ml5.faceApi(video, faceOptions, modelReady);
+    video.hide();
 
     timer = millis();
     textAlign(CENTER, CENTER);
     textSize(32);
 }
 
-function modelReady() {
-    console.log('Model Ready!');
-    faceApi.detect(gotResults);
+async function startFaceTracker() {
+    try {
+        let model = ml5.faceMesh({ maxFaces: 1, refineLandmarks: false, flipHorizontal: false });
+        if (model && typeof model.then === 'function') model = await model;
+        if (model && model.ready) await model.ready;
+        model.detectStart(video, gotFaces);
+        if (window.__pmDemo) window.__pmDemo.hideOverlay();
+    } catch (err) {
+        console.error(err);
+        if (window.__pmDemo) {
+            window.__pmDemo.showError('Face tracking failed to start. Try reloading the page.');
+        }
+    }
 }
 
-function gotResults(err, result) {
-    if (err) {
-        console.log(err);
-        return;
-    }
-    detections = result;
-    faceApi.detect(gotResults);
+function gotFaces(results) {
+    detections = (results || []).map(function (face) {
+        const box = face.box || {};
+        return {
+            alignedRect: {
+                _box: {
+                    _x: box.xMin || 0,
+                    _y: box.yMin || 0,
+                    _width: box.width || 0,
+                    _height: box.height || 0
+                }
+            }
+        };
+    });
 }
 
 function draw() {
@@ -79,42 +173,27 @@ function draw() {
         return;
     }
 
-    // Mirror video
     push();
     translate(width, 0);
     scale(-1, 1);
     image(video, 0, 0, width, height);
     pop();
 
-    // Process Detections
     if (detections && detections.length > 0) {
-        // ml5 faceApi detection object structure:
-        // { alignedRect: { _box: { _x, _y, _width, _height } } }
-        // or just detection.parts if landmarks... 
-        // using simple detection: result[0].alignedRect._box
+        const d = detections[0];
+        const box = d.alignedRect._box;
 
-        let d = detections[0];
-        let box = d.alignedRect._box;
+        const faceX = width - (box._x + box._width);
+        const faceY = box._y;
+        const faceW = box._width;
+        const faceH = box._height;
 
-        // Mirror coordinates for logic because we mirrored the drawing
-        // Actually, logic cares about relative movement, but let's align with visual
-        // Visual X: width - (x + w)  ... calculating "mirrored X"
-
-        let faceX = width - (box._x + box._width);
-        let faceY = box._y;
-        let faceW = box._width;
-        let faceH = box._height;
-
-        // Draw Face Box
         noFill();
         stroke(0, 255, 0);
         strokeWeight(2);
         rect(faceX, faceY, faceW, faceH);
 
-        // Approximate features based on box (Original Logic)
-        // Center of face
-        let noseX = faceX + faceW / 2;
-        let noseY = faceY + faceH / 2;
+        const noseX = faceX + faceW / 2;
 
         updateMovementState(noseX);
         trackBreathing(faceX, faceY, faceW, faceH);
@@ -122,9 +201,8 @@ function draw() {
         currentState = MOVEMENT_STATE.NO_MOVEMENT;
     }
 
-    // Draw Shapes (Permanent markers)
-    for (let s of shapes) {
-        s.display();
+    for (let i = 0; i < shapes.length; i++) {
+        shapes[i].display();
     }
 
     manageCountdownAndMovement();
@@ -135,15 +213,8 @@ function updateMovementState(currentNoseX) {
     let movement = MOVEMENT_STATE.NO_MOVEMENT;
 
     if (previousNoseX !== -1) {
-        let diff = currentNoseX - previousNoseX;
-
+        const diff = currentNoseX - previousNoseX;
         if (abs(diff) > movementThreshold) {
-            // Because we mirrored x, "Right" on screen is +X? 
-            // Normal p5: 0 is left, Width is right.
-            // If nose moves +X, it's moving Right.
-            // Original code: if (movementNose < 0) "Right" else "Left" 
-            // (Original had scale(-1, 1) so drawing was mirrored, but logic might have been on raw video coords?)
-            // Let's stick to screen coords:
             if (diff > 0) {
                 movement = MOVEMENT_STATE.RIGHT;
             } else {
@@ -156,24 +227,14 @@ function updateMovementState(currentNoseX) {
 }
 
 function trackBreathing(faceX, faceY, faceW, faceH) {
-    // "Bottom center" of face for chest approximation
-    let chestY = faceY + faceH * 0.75;
+    const chestY = faceY + faceH * 0.75;
 
     if (prevChestY === null) {
         prevChestY = chestY;
         return;
     }
 
-    let verticalDisplacement = chestY - prevChestY;
-
-    // Detect breath cycle: Up then Down (or vice versa depending on posture)
-    // Original: prev > threshold && current < -threshold
-    // Assuming Y increases downwards (standard p5)
-    // Inhale usually lifts shoulders/head UP (-Y). Exhale DOWN (+Y).
-    // Original logic: "prevVerticalDisplacement > breathThreshold" (Moved Down?)
-    // This part is tricky without testing. I'll stick to logical "Change in direction with magnitude"
-
-    // Original: if (prevVerticalDisplacement > breathThreshold && verticalDisplacement < -breathThreshold)
+    const verticalDisplacement = chestY - prevChestY;
 
     if (prevVerticalDisplacement > breathThreshold && verticalDisplacement < -breathThreshold) {
         breathCount++;
@@ -184,10 +245,10 @@ function trackBreathing(faceX, faceY, faceW, faceH) {
 }
 
 function manageCountdownAndMovement() {
-    let elapsedTime = millis() - timer;
+    const elapsedTime = millis() - timer;
 
     if (elapsedTime < countdownTime) {
-        let secondsLeft = floor((countdownTime - elapsedTime) / 1000) + 1;
+        const secondsLeft = floor((countdownTime - elapsedTime) / 1000) + 1;
 
         fill(0, 250, 30);
         noStroke();
@@ -201,9 +262,8 @@ function manageCountdownAndMovement() {
     } else if (elapsedTime < countdownTime + movementTime + 500) {
         fill(0, 250, 30);
         textSize(64);
-        text("Move!", width / 2, height / 2);
+        text('Move!', width / 2, height / 2);
 
-        // Capture movement
         if (!actualMovementCaptured && currentState !== MOVEMENT_STATE.NO_MOVEMENT) {
             freezeMovement();
             actualMovementCaptured = true;
@@ -223,11 +283,9 @@ function freezeMovement() {
     attempts++;
     actualMovement = currentState;
 
-    // Error Rate Decay
-    let errorRate = initialErrorRate * exp(-0.10 * attempts);
+    const errorRate = initialErrorRate * Math.exp(-0.10 * attempts);
 
-    if (random(1) < errorRate) {
-        // Flip movement
+    if (Math.random() < errorRate) {
         if (actualMovement === MOVEMENT_STATE.LEFT) displayedMovement = MOVEMENT_STATE.RIGHT;
         else if (actualMovement === MOVEMENT_STATE.RIGHT) displayedMovement = MOVEMENT_STATE.LEFT;
         else displayedMovement = MOVEMENT_STATE.NO_MOVEMENT;
@@ -247,18 +305,18 @@ function checkMovementAccuracy() {
 }
 
 function drawArrowBasedOnDisplayedMovement() {
-    let x = width / 2;
-    let y = height / 4;
-    let arrowLength = 60;
-    let arrowWidth = 30;
+    const x = width / 2;
+    const y = height / 4;
+    const arrowLength = 60;
+    const arrowWidth = 30;
 
     fill(0, 0, 255);
     noStroke();
 
     if (displayedMovement === MOVEMENT_STATE.LEFT) {
-        triangle(x + arrowLength, y, x - arrowWidth, y - arrowWidth, x - arrowWidth, y + arrowWidth);
-    } else if (displayedMovement === MOVEMENT_STATE.RIGHT) {
         triangle(x - arrowLength, y, x + arrowWidth, y - arrowWidth, x + arrowWidth, y + arrowWidth);
+    } else if (displayedMovement === MOVEMENT_STATE.RIGHT) {
+        triangle(x + arrowLength, y, x - arrowWidth, y - arrowWidth, x - arrowWidth, y + arrowWidth);
     }
 }
 
@@ -277,6 +335,9 @@ class Shape {
             noStroke();
             ellipse(this.x, this.y, this.size * 2);
         } else if (this.type === 'x') {
+            fill(this.col);
+            noStroke();
+            ellipse(this.x, this.y, this.size * 2);
             stroke(this.col);
             strokeWeight(5);
             line(this.x - this.size, this.y - this.size, this.x + this.size, this.y + this.size);
@@ -286,39 +347,24 @@ class Shape {
 }
 
 function drawBlackCircle() {
-    let radius = random(10, 50);
-    // Draw basically anywhere
-    let x = random(radius, width - radius);
-    let y = random(radius, height - radius);
-    shapes.push(new Shape(x, y, radius, 0, 'circle'));
+    const radius = random(10, 50);
+    const x = random(radius, width - radius);
+    const y = random(radius, height - radius);
+    shapes.push(new Shape(x, y, radius, color(0), 'circle'));
 }
 
 function drawRedX() {
-    let x = random(50, width - 50);
-    let y = random(50, height - 50);
-    shapes.push(new Shape(x, y, 20, color(255, 0, 0), 'x'));
+    const radius = random(10, 50);
+    const x = random(radius, width - radius);
+    const y = random(radius, height - radius);
+    shapes.push(new Shape(x, y, radius, color(255, 0, 0), 'x'));
 }
 
 function displayBreathCountOverlay() {
-    // Only text at bottom or top? Original was full overlay?
-    // "fill(0, 180); rect(0, 0, width, height);" -> Covers WHOLE screen?
-    // Wait, original draw loop: 
-    // displayBreathCountOverlay(); // At the end.
-    // It covers everything? 
-    // Original code: text "You took X breaths". 
-    // If it covers everything, you can't see the video...
-    // Ah, transparency 180/255. So it darkens everything.
-
-    // push();
-    // fill(0, 50); // Make it subtler for web? Or stick to source. Source: 180.
-    // rect(0, 0, width, height);
-    // pop(); 
-    // Actually, let's just show text clearly.
-
     fill(255);
     noStroke();
     textSize(24);
-    text("Breaths: " + breathCount, width / 2, height - 30);
+    text('Breaths: ' + breathCount, width / 2, height - 30);
 }
 
 function displayGameOverScreen() {
@@ -327,6 +373,6 @@ function displayGameOverScreen() {
     noStroke();
     textSize(32);
     textLeading(40);
-    text("You took " + breathCount + " breaths\nso the prediction machine has stopped", width / 2, height / 2);
-    noLoop(); // Stop the game loop
+    text('You took ' + breathCount + ' breaths\nso the prediction machine has stopped', width / 2, height / 2);
+    noLoop();
 }

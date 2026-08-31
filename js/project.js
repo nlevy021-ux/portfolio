@@ -241,8 +241,18 @@ document.addEventListener('DOMContentLoaded', () => {
         ${heroHTML}
 
         ${project.id === 'prediction-machine' ? `
-        <div class="project-section" id="prediction-machine-game">
-            <div id="game-container" style="display: flex; justify-content: center; margin: 2rem 0; background: #000; border: 1px solid #333; min-height: 480px;"></div>
+        <div class="project-section" id="section-demo">
+            <div id="prediction-demo" class="pm-demo">
+                <div class="pm-stage" id="game-container">
+                    <div id="pm-overlay" class="pm-overlay" role="dialog" aria-labelledby="pm-title" aria-describedby="pm-copy">
+                        <p class="pm-kicker">Interactive piece</p>
+                        <h2 id="pm-title" class="pm-title">Live Demo</h2>
+                        <p id="pm-copy" class="pm-copy">This piece needs your camera to track face movement and breath. Your browser will ask for permission. Video stays on this device and is never recorded or uploaded.</p>
+                        <button type="button" class="pm-start" id="pm-start">Allow camera &amp; start</button>
+                        <p class="pm-status" id="pm-status" hidden></p>
+                    </div>
+                </div>
+            </div>
         </div>
         ` : ''}
 
@@ -310,20 +320,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (project.id === 'prediction-machine') {
-        const loadScript = (src) => {
-            return new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = src;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        };
-
-        loadScript('https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js')
-            .then(() => loadScript('https://unpkg.com/ml5@latest/dist/ml5.min.js'))
-            .then(() => loadScript('js/sketches/prediction-machine.js'))
-            .catch(e => console.error('Error loading game scripts:', e));
+        if (pageNav && !pageNav.querySelector('[onclick*="demo"]')) {
+            const demoLink = document.createElement('a');
+            demoLink.className = 'page-nav-link';
+            demoLink.setAttribute('onclick', "scrollToSection('demo')");
+            demoLink.textContent = 'Live Demo';
+            const label = pageNav.querySelector('.page-nav-label');
+            if (label && label.nextSibling) label.after(demoLink);
+            else pageNav.insertBefore(demoLink, pageNav.firstChild);
+        }
+        const script = document.createElement('script');
+        script.src = 'js/sketches/prediction-machine.js?v=orig2';
+        document.body.appendChild(script);
     }
 
     let currentImageIndex = 0;

@@ -2353,3 +2353,140 @@ body.product-mode .project-section {
         height: 180px;
     }
 }
+
+/* Prediction Machine live demo */
+.pm-demo {
+    margin: 0 0 2.5rem;
+}
+
+.pm-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #111;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.pm-stage .p5Canvas,
+.pm-stage canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    visibility: visible !important;
+}
+
+.pm-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 32px 28px;
+    text-align: center;
+    background: #111;
+    color: #fafafa;
+}
+
+.pm-overlay.is-off {
+    display: none;
+}
+
+.pm-overlay.is-end {
+    background: #fafafa;
+    color: #111;
+}
+
+.pm-kicker {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #888;
+    font-weight: 600;
+}
+
+.pm-overlay.is-end .pm-kicker {
+    color: #888;
+}
+
+.pm-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.1rem);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.1;
+    color: inherit;
+}
+
+.pm-copy {
+    max-width: 34em;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #cfcfcf;
+}
+
+.pm-overlay.is-end .pm-copy {
+    color: #444;
+}
+
+.pm-start {
+    appearance: none;
+    border: 1px solid #fafafa;
+    background: #fafafa;
+    color: #111;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 12px 18px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.pm-start:hover,
+.pm-start:focus-visible {
+    background: transparent;
+    color: #fafafa;
+}
+
+.pm-overlay.is-end .pm-start {
+    border-color: #111;
+    background: #111;
+    color: #fafafa;
+}
+
+.pm-overlay.is-end .pm-start:hover,
+.pm-overlay.is-end .pm-start:focus-visible {
+    background: transparent;
+    color: #111;
+}
+
+.pm-start:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}
+
+.pm-status {
+    min-height: 1.2em;
+    font-size: 0.82rem;
+    color: #9a9a9a;
+}
+
+@media (max-width: 768px) {
+    .pm-demo {
+        margin-bottom: 1.75rem;
+    }
+
+    .pm-overlay {
+        padding: 24px 18px;
+        gap: 12px;
+    }
+
+    .pm-copy {
+        font-size: 0.88rem;
+    }
+}
