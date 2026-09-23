@@ -663,7 +663,9 @@ window.projects = {
                 <p>Each incoming camera frame is compared against that baseline to detect forward head movement, hunching, and leaning toward the screen. The raw measurements are smoothed over time to prevent momentary movements from triggering feedback. They are then combined into a single posture-intensity value from 0 to 1.</p>
                 <p>That value controls the interface in real time: mild drift gradually dims the page, sustained poor posture brings forward the FIX POSTURE prompt, and returning to baseline restores the workspace. A live spine visualization mirrors the same landmark data so users can see the feedback loop during testing.</p>`,
             url: 'project.html?id=straightup',
-            images: []
+            images: [
+                { url: 'assets/straightup/ui.png', title: 'On-device console', materials: 'Camera · baseline · posture checks', layout: 'full' }
+            ]
         },
         {
             id: 'news-dashboard',
