@@ -448,7 +448,7 @@ window.projects = {
             practice: 'End-to-end design and development of interactive art systems integrating hardware, software, and user experience.',
             work: 'End-to-end design and development of interactive art systems integrating hardware, software, and user experience. The work uses a combination of computer vision and projection mapping to challenge traditional notions of seeing.',
             process: `
-                <p>Speculum Cerebri is built as a real-time feedback system that translates a viewer’s brain activity into visual transformation.</p>
+                <p>Speculum Cerebri is built in TouchDesigner as a real-time feedback system that translates a viewer’s brain activity into visual transformation.</p>
 
                 <strong>System pipeline:</strong>
                 <ul>
