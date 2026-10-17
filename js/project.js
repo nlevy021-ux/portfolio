@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (matches.length > 0) {
             project = {
                 ...matches[0],
+                ...(window.artProcesses || {})[projectId],
                 mediums: [...new Set(matches.map(p => p.medium))]
             };
         }
@@ -122,6 +123,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const descriptionContent = project.detailedDescription || project.description || '';
     const processDescription = project.process || '';
     const hasProcess = project.process && project.process.trim() !== '';
+    const processHTML = hasProcess ? `
+        <div class="project-content-grid art-layout" id="section-process">
+            <div class="project-full-col">
+                <div class="project-section">
+                    <h2 class="section-title">Process</h2>
+                    <div class="section-content" data-field="process">${processDescription}</div>
+                </div>
+            </div>
+        </div>` : '';
 
     const buildHtml = project.build
         || [project.interaction, project.system].filter((html) => html && String(html).trim()).join('');
@@ -146,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `).join('') + (galleryHTML ? `
             <div class="project-section" id="section-work">
-                <h2 class="section-title">Work</h2>
                 ${galleryHTML}
             </div>
         ` : '');
@@ -155,27 +164,16 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="project-content-grid art-layout" id="section-description">
                 <div class="project-full-col">
                     <div class="project-section">
-                        <h2 class="section-title">Description</h2>
                         <div class="section-content" data-field="description">${descriptionContent}</div>
                     </div>
                 </div>
             </div>
 
             <div class="project-section" id="section-work">
-                <h2 class="section-title">Work</h2>
                 ${galleryHTML}
             </div>
 
-            ${hasProcess ? `
-            <div class="project-content-grid art-layout" id="section-process">
-                <div class="project-full-col">
-                    <div class="project-section">
-                        <h2 class="section-title">Process</h2>
-                        <div class="section-content" data-field="process">${processDescription}</div>
-                    </div>
-                </div>
-            </div>
-            ` : ''}
+            ${processHTML}
         `;
     }
 
@@ -286,7 +284,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update sidebar page nav for case studies
     const pageNav = document.querySelector('.page-nav');
     if (pageNav) {
-        if (isCaseStudy && caseSections.length) {
+        if ((window.artProcesses || {})[projectId]) {
+            pageNav.innerHTML = `
+                <span class="page-nav-label">On This Page</span>
+                <a class="page-nav-link" href="#section-description">Description</a>
+                <a class="page-nav-link" href="#section-work">Work</a>
+                <a class="page-nav-link" href="#section-process">Process</a>`;
+        } else if (isCaseStudy && caseSections.length) {
             pageNav.innerHTML = `
                 <span class="page-nav-label">On This Page</span>
                 ${heroHTML ? `<a class="page-nav-link" onclick="scrollToSection('overview')">Overview</a>` : ''}
@@ -449,6 +453,14 @@ function bindMobileNav() {
         const open = sidebar.classList.toggle('is-open');
         btn.setAttribute('aria-expanded', String(open));
         btn.textContent = open ? 'Close' : 'Menu';
+    });
+
+    sidebar.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', () => {
+            sidebar.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+            btn.textContent = 'Menu';
+        });
     });
 
     const mq = window.matchMedia('(max-width: 768px)');

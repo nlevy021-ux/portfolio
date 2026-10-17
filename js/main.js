@@ -2,7 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const gridContainer = document.getElementById('project-grid');
     const yearFiltersContainer = document.getElementById('year-filters');
     const mediumFiltersContainer = document.getElementById('medium-filters');
+    const workFiltersContainer = document.getElementById('work-filters');
+    const selectedArtProjectIds = new Set(window.selectedArtProjectIds || []);
 
+    let currentWorkFilter = workFiltersContainer ? 'selected' : 'all';
     let currentYearFilter = 'all';
     let currentMediumFilter = 'all';
     let allProjects = [];
@@ -36,7 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         gridContainer.innerHTML = '';
 
-        data.forEach(project => {
+        const orderedProjects = currentWorkFilter === 'selected'
+            ? Array.from(selectedArtProjectIds, id => data.find(project => project.id === id)).filter(Boolean)
+            : data;
+
+        orderedProjects.forEach(project => {
             if (currentYearFilter !== 'all' && String(project.year) !== String(currentYearFilter)) return;
             const mediums = project.mediums || [project.medium];
             if (currentMediumFilter !== 'all' && !mediums.includes(currentMediumFilter)) return;
@@ -71,6 +78,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderFilters(data) {
         if (!yearFiltersContainer || !mediumFiltersContainer) return;
 
+        if (workFiltersContainer) {
+            [['Selected work', 'selected'], ['All work', 'all']].forEach(([label, value]) => {
+                const btn = createFilterBtn(label, 'work', value);
+                const li = document.createElement('li');
+                li.appendChild(btn);
+                workFiltersContainer.appendChild(li);
+                if (value === currentWorkFilter) updateActiveState(workFiltersContainer, btn);
+            });
+        }
+
         const years = [...new Set(data.map(p => p.year))].sort((a, b) => b - a);
         const mediumOrder = ['Photography', 'Printmaking', 'Technology'];
         const media = [...new Set(data.flatMap(p => p.mediums || [p.medium]))]
@@ -82,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const allYearsBtn = createFilterBtn('All', 'year', 'all');
         allYearsBtn.classList.add('active');
+        allYearsBtn.setAttribute('aria-pressed', 'true');
         const yearListItem = document.createElement('li');
         yearListItem.appendChild(allYearsBtn);
         yearFiltersContainer.appendChild(yearListItem);
@@ -95,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const allMediaBtn = createFilterBtn('All', 'medium', 'all', 'dot-all');
         allMediaBtn.classList.add('active');
+        allMediaBtn.setAttribute('aria-pressed', 'true');
         const mediumListItem = document.createElement('li');
         mediumListItem.appendChild(allMediaBtn);
         mediumFiltersContainer.appendChild(mediumListItem);
@@ -109,7 +128,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createFilterBtn(label, type, value, dotClass = null) {
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'filter-btn';
+        btn.setAttribute('aria-pressed', 'false');
+
+        if (type === 'work' && value === 'selected') {
+            const star = document.createElement('span');
+            star.className = 'selected-work-star';
+            star.setAttribute('aria-hidden', 'true');
+            star.textContent = '\u2605';
+            btn.appendChild(star);
+        }
 
         if (dotClass) {
             const dot = document.createElement('span');
@@ -132,7 +161,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleFilterClick(clickedBtn, type, value) {
-        if (type === 'year') {
+        if (type === 'work') {
+            currentWorkFilter = value;
+            updateActiveState(workFiltersContainer, clickedBtn);
+        } else if (type === 'year') {
             currentYearFilter = value;
             updateActiveState(yearFiltersContainer, clickedBtn);
         } else if (type === 'medium') {
@@ -145,8 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateActiveState(container, activeBtn) {
         const buttons = container.querySelectorAll('.filter-btn');
-        buttons.forEach(b => b.classList.remove('active'));
+        buttons.forEach(b => {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+        });
         activeBtn.classList.add('active');
+        activeBtn.setAttribute('aria-pressed', 'true');
     }
 
     function formatMediumsWithDots(mediums) {

@@ -1,0 +1,56 @@
+/* Original → intervention → result: one compact visual per project. */
+#section-process, #section-work { scroll-margin-top: 80px; }
+.process-original { margin-bottom: 32px; }
+.process-original p { text-indent: 0; }
+.process-flow { display: grid; grid-template-columns: minmax(0, 1fr) 24px minmax(0, 0.9fr) 24px minmax(0, 1fr); gap: 12px; align-items: start; }
+.flow-stage { min-width: 0; margin: 0; }
+.flow-media, .flow-compute { height: clamp(240px, 23vw, 330px); }
+.flow-media { display: flex; align-items: center; justify-content: center; background: #f0f0ed; }
+.flow-media img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.flow-stage figcaption, .flow-caption { padding-top: 14px; font-size: 0.8rem; line-height: 1.6; color: #666; }
+.flow-label { display: block; margin-bottom: 5px; font-weight: 600; color: #292929; }
+.flow-arrow { display: flex; align-items: center; justify-content: center; height: clamp(240px, 23vw, 330px); font-size: 26px; color: #666; }
+.flow-compute { display: flex; flex-direction: column; justify-content: center; align-items: stretch; padding: 16px; border: 1px solid #d9d9d5; background: #f4f4f1; }
+.compute-caption { text-align: center; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1.1px; color: #777; margin-bottom: 12px; }
+.compute-node { border: 1px solid #d6d6d1; padding: 9px 6px; background: #fff; text-align: center; font-size: 0.76rem; line-height: 1.45; color: #666; }
+.compute-node span { display: block; color: #222; font-weight: 600; font-size: 0.85rem; margin-bottom: 2px; }
+.compute-node.human-node { border-color: #353535; background: #353535; color: #e8e8e8; }
+.compute-node.human-node span { color: #fff; }
+.compute-arrow { text-align: center; font-size: 16px; line-height: 1.2; color: #888; }
+.process-story a:focus-visible { outline: 2px solid #222; outline-offset: 5px; }
+.process-code { margin-top: 14px; border: 1px solid #d9d9d5; background: #f4f4f1; padding: 12px; }
+.process-code summary { cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #444; }
+.process-code summary:focus-visible { outline: 2px solid #222; outline-offset: 5px; }
+.process-code p { font-size: 0.8rem; line-height: 1.65; margin-top: 14px; }
+.process-code pre { padding: 10px; background: #e9e9e5; font-size: 0.7rem; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.process-code .code-caption { color: #666; font-size: 0.75rem; }
+.process-code > :last-child { margin-bottom: 0; }
+.project-full-col { min-width: 0; }
+
+/* Project navigation: identity, page sections, then other destinations. */
+.project-sidebar .logo { margin-bottom: 0; }
+.project-sidebar .sidebar-header { margin-bottom: 36px; }
+.project-sidebar .nav-links-static { margin-top: 0; }
+.project-sidebar .project-back-link { font-size: 0.82rem; margin-bottom: 0; }
+.project-sidebar .page-nav { margin-top: 24px; padding-top: 20px; gap: 2px; }
+.project-sidebar .page-nav-label { font-size: 0.64rem; letter-spacing: 1.2px; margin-bottom: 10px; }
+.project-sidebar .page-nav-link { margin-bottom: 0; padding: 7px 0; line-height: 1.4; }
+.project-sidebar .project-sidebar-footer { margin-top: 24px; padding-top: 20px; border-top: 1px solid #eee; }
+.project-sidebar .project-sidebar-footer a { margin: 0; padding: 7px 0; font-size: 0.82rem; line-height: 1.5; }
+@media (min-width: 769px) {
+    .project-sidebar { padding: 32px; }
+}
+@media (max-width: 768px) {
+    .project-sidebar .sidebar-header { margin-bottom: 0; }
+    .project-sidebar .nav-links-static { display: grid; gap: 12px; border-top: 0; padding-top: 0; }
+    .project-sidebar .nav-links-static .page-nav,
+    .project-sidebar .nav-links-static .project-sidebar-footer { display: grid; gap: 0; padding-top: 12px; }
+}
+@media (max-width: 1050px) {
+    .process-flow { grid-template-columns: minmax(0, 1fr); gap: 14px; max-width: 600px; margin: 0 auto; }
+    .flow-media { height: auto; aspect-ratio: 4 / 3; }
+    .flow-compute { height: auto; min-height: 270px; padding: 24px; }
+    .compute-node { max-width: 280px; width: 100%; align-self: center; }
+    .flow-arrow { height: 24px; transform: rotate(90deg); }
+}
+

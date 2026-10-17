@@ -1,3 +1,13 @@
+// Curated art portfolio in display order, shared across its mediums.
+window.selectedArtProjectIds = [
+    'precedence',
+    'constructed-organics',
+    'speculum-cerebri',
+    'pareidolia',
+    'x3-18-3',
+    'etchings'
+];
+
 window.projects = {
     photography: [
         {
@@ -33,10 +43,10 @@ window.projects = {
                 { url: 'assets/precedence/render-05.png', title: 'Green', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
                 { url: 'assets/precedence/render-06.png', title: 'Switch', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
                 { url: 'assets/precedence/render-07.png', title: 'Stair', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
-                { url: 'assets/precedence/photo-01.png', title: 'Installation', materials: 'Metal, iridescent film, inkjet print', layout: 'full' },
-                { url: 'assets/precedence/photo-02.png', title: 'Teardrop', materials: 'Metal, iridescent film', layout: 'full' },
-                { url: 'assets/precedence/photo-03.png', title: 'Cylinder', materials: 'Metal wire, glass', layout: 'full' },
-                { url: 'assets/precedence/photo-04.png', title: 'Sail', materials: 'Metal wire, glass, iridescent film', layout: 'full' }
+                { url: 'assets/precedence/photo-01.png', title: 'Installation: Switch', materials: 'Metal, iridescent film, inkjet print', layout: 'full' },
+                { url: 'assets/precedence/photo-02.png', title: 'Object: Switch', materials: 'Steel rod, iridescent film', layout: 'full' },
+                { url: 'assets/precedence/photo-03.png', title: 'Object: Stair', materials: 'Steel rod, vinyl', layout: 'full' },
+                { url: 'assets/precedence/photo-04.png', title: 'Object: Green', materials: 'Steel rod, vinyl, iridescent film', layout: 'full' }
             ]
         },
         {
@@ -363,10 +373,10 @@ window.projects = {
                 { url: 'assets/precedence/render-05.png', title: 'Green', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
                 { url: 'assets/precedence/render-06.png', title: 'Switch', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
                 { url: 'assets/precedence/render-07.png', title: 'Stair', materials: 'SDXL Turbo, Real-ESRGAN', layout: 'full' },
-                { url: 'assets/precedence/photo-01.png', title: 'Installation', materials: 'Metal, iridescent film, inkjet print', layout: 'full' },
-                { url: 'assets/precedence/photo-02.png', title: 'Teardrop', materials: 'Metal, iridescent film', layout: 'full' },
-                { url: 'assets/precedence/photo-03.png', title: 'Cylinder', materials: 'Metal wire, glass', layout: 'full' },
-                { url: 'assets/precedence/photo-04.png', title: 'Sail', materials: 'Metal wire, glass, iridescent film', layout: 'full' }
+                { url: 'assets/precedence/photo-01.png', title: 'Installation: Switch', materials: 'Metal, iridescent film, inkjet print', layout: 'full' },
+                { url: 'assets/precedence/photo-02.png', title: 'Object: Switch', materials: 'Steel rod, iridescent film', layout: 'full' },
+                { url: 'assets/precedence/photo-03.png', title: 'Object: Stair', materials: 'Steel rod, vinyl', layout: 'full' },
+                { url: 'assets/precedence/photo-04.png', title: 'Object: Green', materials: 'Steel rod, vinyl, iridescent film', layout: 'full' }
             ]
         },
         {
