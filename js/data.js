@@ -769,9 +769,7 @@ window.projects = {
             overview: `<p>Undertone is a discreet, in-ear speech interface that identifies emotional shifts in conversation and delivers a private audio cue through a single earbud.</p>`,
             problem: `<p>Much of a conversation’s meaning is carried through tone, not just words. A phrase like “it’s fine” can communicate reassurance, frustration, or sadness depending on how it is said. For people who find these emotional cues difficult to interpret, that information can be easy to miss in real time. Any support also needs to be relayed discreetly, without interrupting the conversation or changing its natural flow.</p>`,
             users: `<p><strong>Neurodivergent listeners:</strong> Need optional, real-time support recognizing emotional shifts in conversation, delivered privately without interrupting the exchange.</p>`,
-            build: `<p>The system captures room audio through one AirPod and processes it in three-second windows. Each window is passed to a fine-tuned wav2vec2 model, which estimates vocal-affect categories from acoustic qualities of speech such as pitch, rhythm, energy, and vocal quality.</p>
-                <p>Undertone was fine-tuned on the CREMA-D emotional speech dataset using an actor-held-out evaluation split, reaching approximately 72.8% validation accuracy and 0.73 macro F1. A confidence gate discards weak predictions, while a change gate prevents the earbud from repeating the same category continuously.</p>
-                <p>When both conditions are met, local text-to-speech delivers a short cue, such as “This sounds sad,” through the user’s earbud. When the system is uncertain or detects no meaningful shift, it stays silent. Streamlit provided the live prototype environment; the intended product surface is sound through a single earbud.</p>`,
+            build: `<p>I connected a speech-emotion model to a Python listening loop and spoken feedback. A Streamlit prototype shows the predictions and recent detections while I develop an interaction intended for a single earbud.</p>`,
             url: 'project.html?id=ai-speech-rater',
             images: []
         },

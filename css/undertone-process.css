@@ -1,0 +1,44 @@
+.ut-process { margin-top: 0; }
+.ut-process h3 { font-size: 1.05rem; font-weight: 500; line-height: 1.4; margin: 8px 0 16px; }
+body.product-mode .ut-prose p { font-size: 1rem; line-height: 1.7; margin-bottom: 1em; }
+body.product-mode .ut-prose strong { display: block; font-weight: 600; margin: 16px 0 8px; }
+.ut-prose { margin-bottom: 32px; }
+.ut-label { display: block; font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: #777; }
+.ut-flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.ut-step { min-width: 0; border-top: 1px solid #b9b6ad; padding-top: 18px; }
+.ut-step small, .ut-process figcaption { display: block; font-size: .73rem; line-height: 1.6; color: #777; }
+.ut-windows, .ut-model, .ut-decision { min-height: 155px; margin: 20px 0; padding: 16px 12px; background: #eeece6; border: 1px solid #ddd9cf; }
+.ut-windows { display: flex; align-items: center; justify-content: space-around; gap: 6px; }
+.ut-windows > span { flex: 1; min-width: 0; text-align: center; border-right: 1px solid #c5bca6; font-size: .65rem; }
+.ut-windows > span:last-child { border: 0; }
+.ut-windows svg { display: block; width: 100%; height: 38px; margin: 10px 0; fill: none; stroke: #9d7625; stroke-width: 4px; }
+.ut-model { display: flex; flex-direction: column; justify-content: center; gap: 6px; text-align: center; font-size: .85rem; }
+.ut-categories { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; font-size: .65rem; }
+.ut-categories span { background: #faf9f6; padding: 4px 2px; }
+.ut-decision { display: flex; flex-direction: column; justify-content: center; gap: 18px; font-size: .8rem; text-align: center; }
+.ut-decision > div { display: flex; flex-direction: column; gap: 6px; }
+.ut-decision > div span { background: #faf9f6; padding: 3px; }
+.ut-evidence { margin-top: 48px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.ut-evidence section { min-width: 0; }
+.ut-evidence figure { margin: 20px 0 0; }
+.ut-evidence img { display: block; width: 100%; height: auto; }
+.ut-process figcaption { margin-top: 12px; }
+@media (max-width: 700px) {
+    .ut-flow, .ut-evidence { grid-template-columns: 1fr; gap: 28px; }
+    .ut-windows, .ut-model, .ut-decision { min-height: 135px; }
+}
+
+body.product-mode .section-content:has(.ut-process) { max-width: none; }
+.ut-process a:focus-visible { outline: 2px solid #9d7625; outline-offset: 4px; }
+
+/* Undertone's Process heading; other project pages keep their published styles. */
+#section-build:has(.ut-process) .section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: #999;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+#section-build:has(.ut-process) .section-title::after { display: none; }

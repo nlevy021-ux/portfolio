@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const caseSections = [
         { id: 'problem', label: 'Problem', html: project.problem },
         { id: 'users', label: 'Users', html: project.users },
-        { id: 'build', label: 'How it was built', html: buildHtml }
+        { id: 'build', label: project.buildLabel || 'How it was built', html: buildHtml }
     ].filter(s => (s.html && String(s.html).trim()) || (s.id === 'build' && buildGalleryHTML));
 
     let contentHTML = '';
